@@ -7,12 +7,13 @@ import { StpTaxContainer } from './pages/StpTaxContainer';
 import { FundGraphExplorer } from './pages/FundGraphExplorer';
 import { MFScreener } from './pages/MFScreener';
 import { GoldSilverEtfExplorer } from './pages/GoldSilverEtfExplorer';
+import { NetWealthDashboard } from './pages/NetWealthDashboard';
 import { FundModal } from './components/FundModal';
 import { TOTAL_PORTFOLIO_VALUE_LAKHS, PORTFOLIO_HOLDINGS, type MutualFundHolding } from './data/portfolioData';
 import { Minimize2 } from 'lucide-react';
 
 export function App() {
-  const [activeTab, setActiveTab] = useState<string>('screener');
+  const [activeTab, setActiveTab] = useState<string>('dashboard');
   const [selectedFund, setSelectedFund] = useState<MutualFundHolding | null>(null);
   const [isFullScreen, setIsFullScreen] = useState<boolean>(false);
 
@@ -64,6 +65,13 @@ export function App() {
 
       {/* Main Content */}
       <main className={`flex-1 w-full mx-auto transition-all ${isFullScreen ? 'p-2 sm:p-4 max-w-full' : 'max-w-screen-2xl px-2.5 sm:px-6 lg:px-8 pt-3 sm:pt-6 pb-8 sm:pb-12'}`}>
+        {activeTab === 'dashboard' && (
+          <NetWealthDashboard 
+            onNavigateToHoldings={() => setActiveTab('holdings')} 
+            onNavigateToScreener={() => setActiveTab('screener')} 
+          />
+        )}
+
         {activeTab === 'screener' && <MFScreener />}
 
         {activeTab === 'etf-hub' && <GoldSilverEtfExplorer />}

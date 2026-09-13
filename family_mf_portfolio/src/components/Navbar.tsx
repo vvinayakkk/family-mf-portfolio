@@ -3,7 +3,7 @@ import {
   Table, Activity, ArrowRightLeft,
   Sun, Moon, Trophy, LineChart as ChartIcon,
   Maximize2, Minimize2, RefreshCw, Clock, CheckCircle2,
-  Filter, Coins
+  Filter, Coins, LayoutDashboard
 } from 'lucide-react';
 import { getSyncStatus, performLiveBrowserSync } from '../lib/syncEngine';
 import { reloadMasterDatasetWithFunds } from '../lib/data';
@@ -19,9 +19,10 @@ interface NavbarProps {
 }
 
 const NAV_ITEMS = [
+  { id: 'dashboard',     label: 'Net Wealth',       icon: LayoutDashboard },
+  { id: 'holdings',      label: '106 Holdings',     icon: Table },
   { id: 'screener',      label: 'Screener',         icon: Filter },
   { id: 'etf-hub',       label: 'Gold / Silver / ETFs', icon: Coins },
-  { id: 'holdings',      label: '106 Holdings',     icon: Table },
   { id: 'graphs',        label: 'Fund Graphs',      icon: ChartIcon },
   { id: 'master-ranking',label: '1,500 Master DB',  icon: Trophy },
   { id: 'analytics',     label: 'Risk Analytics',   icon: Activity },
