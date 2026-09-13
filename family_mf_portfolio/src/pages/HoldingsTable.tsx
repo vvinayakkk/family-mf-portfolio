@@ -62,6 +62,7 @@ export const HoldingsTable: React.FC<HoldingsTableProps> = ({ onSelectFund }) =>
   const [selectedCategory, setSelectedCategory] = useState<string>('ALL');
   const [selectedTag, setSelectedTag] = useState<string>('ALL');
   const [selectedAmc, setSelectedAmc] = useState<string>('ALL');
+  const [excludeElss, setExcludeElss] = useState<boolean>(false);
 
   // Crazy Range Slider Filters
   const [minXirr, setMinXirr] = useState<number>(0);
@@ -102,6 +103,11 @@ export const HoldingsTable: React.FC<HoldingsTableProps> = ({ onSelectFund }) =>
   // Multi-Filter & Multi-Sort Processing Engine
   const filteredHoldings = useMemo(() => {
     return PORTFOLIO_HOLDINGS.filter((fund) => {
+      const isElss = fund.category.toLowerCase().includes('elss') || 
+                     fund.name.toLowerCase().includes('elss') || 
+                     fund.name.toLowerCase().includes('tax saver');
+      if (excludeElss && isElss) return false;
+
       const matchesSearch = 
         fund.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         fund.amc.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -171,6 +177,7 @@ export const HoldingsTable: React.FC<HoldingsTableProps> = ({ onSelectFund }) =>
     setSelectedCategory('ALL');
     setSelectedTag('ALL');
     setSelectedAmc('ALL');
+    setExcludeElss(false);
     setMinXirr(0);
     setMinSharpe(0);
     setMaxExpense(2.5);
@@ -316,21 +323,52 @@ export const HoldingsTable: React.FC<HoldingsTableProps> = ({ onSelectFund }) =>
             </button>
           );
         })}
+
+        <div className="h-4 w-px bg-neutral-300 dark:bg-neutral-700 flex-shrink-0 mx-1" />
+
+        {/* 1-Click Filter Out ELSS Schemes Button */}
+        <button
+          onClick={() => setExcludeElss(!excludeElss)}
+          className={`px-3 py-1.5 rounded-xl font-bold whitespace-nowrap transition flex items-center gap-1.5 flex-shrink-0 ${
+            excludeElss
+              ? 'bg-rose-600 text-white shadow-sm ring-2 ring-rose-400 dark:ring-rose-500'
+              : 'bg-white dark:bg-black text-neutral-700 dark:text-neutral-300 hover:text-rose-600 dark:hover:text-rose-400 border border-neutral-200 dark:border-neutral-800'
+          }`}
+        >
+          <span>{excludeElss ? '✓ ELSS Filtered Out' : '🚫 Filter Out ELSS'}</span>
+        </button>
       </div>
 
       {/* Multi-Parameter Filters Controls Panel */}
       <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-md space-y-4 text-xs">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-neutral-200 dark:border-neutral-800 pb-3 gap-2">
-          <h3 className="font-extrabold text-sm text-neutral-900 dark:text-white flex items-center gap-2">
-            <SlidersHorizontal className="w-4 h-4 text-emerald-600 dark:text-emerald-400" /> Multi-Parameter Analytical Filters
-          </h3>
-          <div className="flex items-center space-x-3 self-end sm:self-auto">
+          <div className="flex items-center gap-2">
+            <h3 className="font-extrabold text-sm text-neutral-900 dark:text-white flex items-center gap-2">
+              <SlidersHorizontal className="w-4 h-4 text-emerald-600 dark:text-emerald-400" /> Multi-Parameter Analytical Filters
+            </h3>
+            {excludeElss && (
+              <span className="px-2 py-0.5 rounded-lg bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/30 text-[10px] font-bold">
+                ELSS Excluded
+              </span>
+            )}
+          </div>
+          <div className="flex items-center space-x-2 self-end sm:self-auto">
+            <button
+              onClick={() => setExcludeElss(!excludeElss)}
+              className={`px-2.5 py-1 rounded-xl text-xs font-bold transition flex items-center gap-1 ${
+                excludeElss
+                  ? 'bg-rose-600 text-white shadow-sm'
+                  : 'bg-neutral-100 dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-800'
+              }`}
+            >
+              <span>{excludeElss ? '✓ ELSS Excluded' : 'Filter Out ELSS'}</span>
+            </button>
             <button
               onClick={resetAllFilters}
-              className="text-xs font-bold text-neutral-500 hover:text-neutral-900 dark:hover:text-white flex items-center gap-1.5 transition"
+              className="text-xs font-bold text-neutral-500 hover:text-neutral-900 dark:hover:text-white flex items-center gap-1.5 transition px-2"
             >
               <RotateCcw className="w-3.5 h-3.5" />
-              <span>Reset All</span>
+              <span>Reset</span>
             </button>
             <button
               onClick={() => setIsFiltersCollapsed(!isFiltersCollapsed)}

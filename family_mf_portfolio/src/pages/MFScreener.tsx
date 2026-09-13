@@ -171,11 +171,13 @@ interface FilterState {
   minPercLarge: number;
   maxPercSmall: number;
   minPercEquity: number;
+  excludeElss: boolean;
 }
 
 const DEFAULT_FILTERS: FilterState = {
   search: '',
   universe: 'all',
+  excludeElss: false,
   categories: [],
   subcategories: [],
   plan: 'all',
@@ -343,6 +345,13 @@ export const MFScreener: React.FC = () => {
         if (!matchesCat) return false;
       }
 
+      // ELSS Exclusion Filter
+      if (filters.excludeElss) {
+        const cat = (f.category ?? '').toLowerCase();
+        const name = (f.label ?? f.schemeName ?? '').toLowerCase();
+        if (cat.includes('elss') || name.includes('elss') || name.includes('tax saver')) return false;
+      }
+
       // AUM
       if (f.aum != null) {
         if (f.aum < filters.minAum || f.aum > filters.maxAum) return false;
@@ -507,6 +516,17 @@ export const MFScreener: React.FC = () => {
               {opt.l}
             </label>
           ))}
+          <div className="pt-2 mt-1 border-t border-neutral-200 dark:border-neutral-800">
+            <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold" style={{ color: filters.excludeElss ? 'var(--rose, #f43f5e)' : 'var(--text-main)' }}>
+              <input
+                type="checkbox"
+                checked={filters.excludeElss}
+                onChange={e => updateFilter('excludeElss', e.target.checked)}
+                className="accent-rose-500 rounded"
+              />
+              <span>🚫 Exclude ELSS (Tax Saver)</span>
+            </label>
+          </div>
         </div>
       </FilterSection>
 
