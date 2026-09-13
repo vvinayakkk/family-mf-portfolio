@@ -109,11 +109,11 @@ export const MasterRanking: React.FC = () => {
   return (
     <div className="space-y-6 pb-12 animate-fadeIn">
       {/* Header */}
-      <div className="p-6 rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-md flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="p-4 sm:p-6 rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-md flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center space-x-2 mb-1">
             <span className="chip font-bold">
-              <Trophy className="w-3.5 h-3.5" /> 866 Direct Schemes Indexed
+              <Trophy className="w-3.5 h-3.5" /> {allFunds.length} Direct Schemes Indexed
             </span>
           </div>
           <h2 className="text-xl sm:text-2xl font-extrabold text-neutral-900 dark:text-white">Master Indian Mutual Fund Database</h2>
@@ -121,15 +121,15 @@ export const MasterRanking: React.FC = () => {
             Complete data table featuring 21 metrics: CAGRs, XIRRs, 3Y Rolling Return Min/Med/Max, Sharpe, Sortino, Beta, Expense Ratio, and Historic NAV Graphs.
           </p>
         </div>
-        <div className="flex items-center gap-2 flex-shrink-0">
+        <div className="flex items-center gap-2 flex-shrink-0 self-end sm:self-auto">
           <ExportDropdown data={fundsToExportRows(filteredFunds)} filename="master-database-1500" />
         </div>
       </div>
 
       {/* 1-Click Quick Sort Presets Bar */}
-      <div className="flex items-center space-x-2 text-xs overflow-x-auto pb-1 scrollbar-none">
+      <div className="flex items-center space-x-2 text-xs overflow-x-auto pb-1.5 scrollbar-none touch-pan-x">
         <span className="text-neutral-500 font-bold flex-shrink-0 flex items-center gap-1">
-          <ArrowUpDown className="w-3.5 h-3.5" /> Quick Sort Presets:
+          <ArrowUpDown className="w-3.5 h-3.5" /> Quick Sort:
         </span>
         {[
           { label: 'Top 3Y CAGR %', field: 'y3', order: 'desc' },
@@ -149,7 +149,7 @@ export const MasterRanking: React.FC = () => {
                 setSortField(preset.field as any);
                 setSortOrder(preset.order as any);
               }}
-              className={`px-3 py-1.5 rounded-xl font-bold whitespace-nowrap transition ${
+              className={`px-3 py-1.5 rounded-xl font-bold whitespace-nowrap transition flex-shrink-0 ${
                 isActive
                   ? 'bg-black dark:bg-white text-white dark:text-black shadow-sm'
                   : 'bg-white dark:bg-black text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white border border-neutral-200 dark:border-neutral-800'
@@ -162,12 +162,12 @@ export const MasterRanking: React.FC = () => {
       </div>
 
       {/* Multi-Parameter Filters Controls Panel */}
-      <div className="p-5 rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-md space-y-4 text-xs">
-        <div className="flex items-center justify-between border-b border-neutral-200 dark:border-neutral-800 pb-3">
+      <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-md space-y-4 text-xs">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-neutral-200 dark:border-neutral-800 pb-3 gap-2">
           <h3 className="font-extrabold text-sm text-neutral-900 dark:text-white flex items-center gap-2">
             <SlidersHorizontal className="w-4 h-4 text-emerald-600 dark:text-emerald-400" /> Master Database Multi-Filters
           </h3>
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-3 self-end sm:self-auto">
             <button
               onClick={resetAllFilters}
               className="text-xs font-bold text-neutral-500 hover:text-neutral-900 dark:hover:text-white flex items-center gap-1.5 transition"
@@ -180,7 +180,7 @@ export const MasterRanking: React.FC = () => {
               className="px-2.5 py-1 rounded-xl bg-neutral-100 dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 font-bold flex items-center space-x-1 hover:bg-neutral-200 dark:hover:bg-neutral-800 transition"
             >
               {isFiltersCollapsed ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronUp className="w-3.5 h-3.5" />}
-              <span>{isFiltersCollapsed ? 'Expand Filters' : 'Collapse Filters'}</span>
+              <span>{isFiltersCollapsed ? 'Expand' : 'Collapse'}</span>
             </button>
           </div>
         </div>
@@ -278,12 +278,12 @@ export const MasterRanking: React.FC = () => {
 
       {/* Main 21-Column Master Table */}
       <div className="rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-md overflow-hidden">
-        <div className="p-3 bg-neutral-50 dark:bg-neutral-950 border-b border-neutral-200 dark:border-neutral-800 flex items-center justify-between text-xs">
+        <div className="p-3 bg-neutral-50 dark:bg-neutral-950 border-b border-neutral-200 dark:border-neutral-800 flex flex-col sm:flex-row sm:items-center justify-between text-xs gap-2">
           <span className="font-bold text-neutral-900 dark:text-white">Showing {filteredFunds.length} Funds (Sorted by {String(sortField).toUpperCase()} {sortOrder.toUpperCase()})</span>
-          <span className="text-neutral-500">Click any column header to sort ascending / descending</span>
+          <span className="text-neutral-500 hidden sm:inline">Click any column header to sort</span>
         </div>
 
-        <div className="overflow-x-auto max-h-[650px]">
+        <div className="overflow-x-auto max-h-[650px] table-scroll-container">
           <table className="mono-table">
             <thead>
               <tr className="sticky top-0 z-10">

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import type { MutualFundHolding } from '../data/portfolioData';
-import { PORTFOLIO_HOLDINGS } from '../data/portfolioData';
+import { PORTFOLIO_HOLDINGS, TOTAL_PORTFOLIO_VALUE_LAKHS } from '../data/portfolioData';
 import { Activity, ShieldCheck, AlertTriangle, Award, ArrowUpRight } from 'lucide-react';
 import { ScatterChart, Scatter, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, ZAxis } from 'recharts';
 import { loadMasterDataset, fundsWithDataFromDataset, subscribeToDatasetUpdates } from '../lib/data';
@@ -99,7 +99,7 @@ export const RiskRewardQuadrant: React.FC<RiskRewardQuadrantProps> = ({ onSelect
         </div>
         <h2 className="text-xl sm:text-2xl font-extrabold text-neutral-900 dark:text-white">Sharpe Ratio vs Volatility Matrix</h2>
         <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1 max-w-3xl">
-          Plots every fund in your ₹7.93 Cr portfolio by <strong>Volatility / Risk (X-Axis)</strong> vs <strong>Sharpe Ratio / Risk-Adjusted Return (Y-Axis)</strong> to identify star performers vs exit candidates.
+          Plots every fund in your ₹{(TOTAL_PORTFOLIO_VALUE_LAKHS / 100).toFixed(2)} Cr portfolio by <strong>Volatility / Risk (X-Axis)</strong> vs <strong>Sharpe Ratio / Risk-Adjusted Return (Y-Axis)</strong> to identify star performers vs exit candidates.
         </p>
       </div>
 

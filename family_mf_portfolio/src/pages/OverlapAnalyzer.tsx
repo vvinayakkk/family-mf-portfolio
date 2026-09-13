@@ -44,7 +44,7 @@ export const OverlapAnalyzer: React.FC<OverlapAnalyzerProps> = ({ onSelectFund, 
         </div>
         <h2 className="text-xl sm:text-2xl font-extrabold text-neutral-900 dark:text-white">Smart Overlap & AMC Risk Analyzer</h2>
         <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1 max-w-3xl">
-          Managing 91 separate fund schemes leads to stock overlap and AMC folio duplication. Here is your institutional consolidation roadmap.
+          Managing {PORTFOLIO_HOLDINGS.length} separate fund schemes leads to stock overlap and AMC folio duplication. Here is your institutional consolidation roadmap.
         </p>
       </div>
 

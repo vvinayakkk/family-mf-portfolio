@@ -57,6 +57,8 @@ export const HoldingsTable: React.FC<HoldingsTableProps> = ({ onSelectFund }) =>
 
   // Search & Basic Filters
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedInvestor, setSelectedInvestor] = useState<string>('ALL');
+  const [selectedPlatform, setSelectedPlatform] = useState<string>('ALL');
   const [selectedCategory, setSelectedCategory] = useState<string>('ALL');
   const [selectedTag, setSelectedTag] = useState<string>('ALL');
   const [selectedAmc, setSelectedAmc] = useState<string>('ALL');
@@ -72,6 +74,18 @@ export const HoldingsTable: React.FC<HoldingsTableProps> = ({ onSelectFund }) =>
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
   const [graphModalFund, setGraphModalFund] = useState<Fund | null>(null);
+
+  // Investors list
+  const investors = useMemo(() => {
+    const set = new Set(PORTFOLIO_HOLDINGS.map(h => h.investorName).filter(Boolean));
+    return Array.from(set).sort();
+  }, []);
+
+  // Platforms list (CAMPS / KFinkart)
+  const platforms = useMemo(() => {
+    const set = new Set(PORTFOLIO_HOLDINGS.map(h => h.platform).filter(Boolean));
+    return Array.from(set).sort();
+  }, []);
 
   // Categories list
   const categories = useMemo(() => {
@@ -91,8 +105,12 @@ export const HoldingsTable: React.FC<HoldingsTableProps> = ({ onSelectFund }) =>
       const matchesSearch = 
         fund.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         fund.amc.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (fund.folioNumber && fund.folioNumber.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (fund.investorName && fund.investorName.toLowerCase().includes(searchTerm.toLowerCase())) ||
         fund.category.toLowerCase().includes(searchTerm.toLowerCase());
 
+      const matchesInvestor = selectedInvestor === 'ALL' || fund.investorName === selectedInvestor;
+      const matchesPlatform = selectedPlatform === 'ALL' || fund.platform === selectedPlatform;
       const matchesCategory = selectedCategory === 'ALL' || fund.category === selectedCategory;
       const matchesTag = selectedTag === 'ALL' || fund.actionTag === selectedTag;
       const matchesAmc = selectedAmc === 'ALL' || fund.amc === selectedAmc;
@@ -104,6 +122,8 @@ export const HoldingsTable: React.FC<HoldingsTableProps> = ({ onSelectFund }) =>
 
       return (
         matchesSearch && 
+        matchesInvestor &&
+        matchesPlatform &&
         matchesCategory && 
         matchesTag && 
         matchesAmc && 
@@ -146,6 +166,8 @@ export const HoldingsTable: React.FC<HoldingsTableProps> = ({ onSelectFund }) =>
 
   const resetAllFilters = () => {
     setSearchTerm('');
+    setSelectedInvestor('ALL');
+    setSelectedPlatform('ALL');
     setSelectedCategory('ALL');
     setSelectedTag('ALL');
     setSelectedAmc('ALL');
@@ -216,43 +238,55 @@ export const HoldingsTable: React.FC<HoldingsTableProps> = ({ onSelectFund }) =>
   return (
     <div className="space-y-6 pb-12 animate-fadeIn">
       {/* Header & Quick Stats Bar */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-6 rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-md">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 sm:p-6 rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-md">
         <div>
           <div className="flex items-center space-x-2 mb-1">
             <span className="chip font-bold">
-              Filtered: {filteredHoldings.length} / 91 Schemes
+              Filtered: {filteredHoldings.length} / {PORTFOLIO_HOLDINGS.length} Schemes
             </span>
           </div>
-          <h2 className="text-xl sm:text-2xl font-black text-neutral-900 dark:text-white">91 Family Mutual Fund Holdings Terminal</h2>
+          <h2 className="text-xl sm:text-2xl font-black text-neutral-900 dark:text-white">Family Mutual Fund Holdings Terminal ({PORTFOLIO_HOLDINGS.length} Holdings)</h2>
           <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">
-            Institutional sorting & multi-parameter filtering across Realized XIRR % (from statement) alongside CAGRs (1Y–20Y), 3Y Rolling Returns, Sharpe, Sortino, Beta, Volatility, Max Drawdown, and Expense Ratio.
+            Verified family mutual fund statements across Prem Ramchand Bhatia & Sarita Prem Bhatia via CAMPS & KFinkart with exact Realized XIRR %, annualized yield, and risk analytics.
           </p>
         </div>
 
-        <div className="flex items-center space-x-3 text-xs flex-shrink-0">
-          <div className="px-4 py-2 rounded-xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-right">
+        <div className="flex items-center justify-between sm:justify-end space-x-3 text-xs flex-wrap gap-2">
+          <div className="px-3 sm:px-4 py-2 rounded-xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-right">
             <p className="text-[10px] text-neutral-500 font-medium">Filtered Capital Amount</p>
-            <p className="text-base font-black text-emerald-600 dark:text-emerald-400">₹{filteredTotalValue.toFixed(2)} Lakhs</p>
+            <p className="text-sm sm:text-base font-black text-emerald-600 dark:text-emerald-400">₹{filteredTotalValue.toFixed(2)} Lakhs</p>
             <p className="text-[10px] text-neutral-400 font-bold">{((filteredTotalValue / TOTAL_PORTFOLIO_VALUE_LAKHS) * 100).toFixed(1)}% of wealth</p>
           </div>
           <ExportDropdown
             data={filteredHoldings.map(h => ({
-              'Fund Name': h.name, 'AMC': h.amc, 'Category': h.category,
+              'Investor Name': h.investorName,
+              'Platform': h.platform,
+              'Fund Name': h.name,
+              'Folio Number': h.folioNumber,
+              'Units': h.units,
+              'Cost Value (INR)': h.costValueInr,
+              'Current Value (INR)': h.currentValueInr,
+              'Appreciation (INR)': h.appreciationInr,
+              'XIRR (%)': h.xirr,
+              'Annualized Return (%)': h.annualizedReturn,
+              'Weighted Avg Days': h.weightedAvgDays,
+              'AMC': h.amc, 
+              'Category': h.category,
               'Amount (Lakhs)': h.amountLakhs,
-              'XIRR (%)': h.returnPct, 'CAGR 1Y (%)': h.cagr1y, 'CAGR 3Y (%)': h.cagr3y,
+              'CAGR 1Y (%)': h.cagr1y, 'CAGR 3Y (%)': h.cagr3y,
               'CAGR 5Y (%)': h.cagr5y, 'Sharpe': h.sharpeRatio, 'Sortino': h.sortinoRatio,
               'Beta': h.beta, 'Std Dev': h.stdDev, 'Max Drawdown (%)': h.maxDrawdown,
               'Expense (%)': h.expenseRatio,
             }))}
-            filename="holdings-91-portfolio"
+            filename="family-master-portfolio-holdings"
           />
         </div>
       </div>
 
       {/* 1-Click Quick Sort Presets Bar */}
-      <div className="flex items-center space-x-2 text-xs overflow-x-auto pb-1 scrollbar-none">
+      <div className="flex items-center space-x-2 text-xs overflow-x-auto pb-1.5 scrollbar-none touch-pan-x">
         <span className="text-neutral-500 font-bold flex-shrink-0 flex items-center gap-1">
-          <ArrowUpDown className="w-3.5 h-3.5" /> Quick Sort Presets:
+          <ArrowUpDown className="w-3.5 h-3.5" /> Quick Sort:
         </span>
         {[
           { label: 'Highest Capital (₹L)', field: 'amountLakhs', order: 'desc' },
@@ -285,12 +319,12 @@ export const HoldingsTable: React.FC<HoldingsTableProps> = ({ onSelectFund }) =>
       </div>
 
       {/* Multi-Parameter Filters Controls Panel */}
-      <div className="p-5 rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-md space-y-4 text-xs">
-        <div className="flex items-center justify-between border-b border-neutral-200 dark:border-neutral-800 pb-3">
+      <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-md space-y-4 text-xs">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-neutral-200 dark:border-neutral-800 pb-3 gap-2">
           <h3 className="font-extrabold text-sm text-neutral-900 dark:text-white flex items-center gap-2">
             <SlidersHorizontal className="w-4 h-4 text-emerald-600 dark:text-emerald-400" /> Multi-Parameter Analytical Filters
           </h3>
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-3 self-end sm:self-auto">
             <button
               onClick={resetAllFilters}
               className="text-xs font-bold text-neutral-500 hover:text-neutral-900 dark:hover:text-white flex items-center gap-1.5 transition"
@@ -303,7 +337,7 @@ export const HoldingsTable: React.FC<HoldingsTableProps> = ({ onSelectFund }) =>
               className="px-2.5 py-1 rounded-xl bg-neutral-100 dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 font-bold flex items-center space-x-1 hover:bg-neutral-200 dark:hover:bg-neutral-800 transition"
             >
               {isFiltersCollapsed ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronUp className="w-3.5 h-3.5" />}
-              <span>{isFiltersCollapsed ? 'Expand Filters' : 'Collapse Filters'}</span>
+              <span>{isFiltersCollapsed ? 'Expand' : 'Collapse'}</span>
             </button>
           </div>
         </div>
@@ -311,20 +345,50 @@ export const HoldingsTable: React.FC<HoldingsTableProps> = ({ onSelectFund }) =>
         {!isFiltersCollapsed && (
           <>
             {/* Dropdowns Row */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3">
               {/* Search */}
               <div>
-                <label className="text-[11px] font-bold text-neutral-500 mb-1 block">Search Scheme</label>
+                <label className="text-[11px] font-bold text-neutral-500 mb-1 block">Search Scheme / Folio</label>
                 <div className="relative">
                   <Search className="w-3.5 h-3.5 text-neutral-400 absolute left-3 top-2.5" />
                   <input
                     type="text"
-                    placeholder="Search 91 holdings..."
+                    placeholder={`Search ${PORTFOLIO_HOLDINGS.length} holdings...`}
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="w-full pl-8 pr-3 py-1.5 rounded-xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-neutral-900 dark:text-white focus:outline-none"
                   />
                 </div>
+              </div>
+
+              {/* Investor Filter */}
+              <div>
+                <label className="text-[11px] font-bold text-neutral-500 mb-1 block">Investor</label>
+                <select
+                  value={selectedInvestor}
+                  onChange={(e) => setSelectedInvestor(e.target.value)}
+                  className="w-full px-3 py-1.5 rounded-xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-neutral-900 dark:text-white focus:outline-none font-medium"
+                >
+                  <option value="ALL">All Investors ({investors.length})</option>
+                  {investors.map((inv) => (
+                    <option key={inv} value={inv}>{inv.split(' ')[0]} ({PORTFOLIO_HOLDINGS.filter(h => h.investorName === inv).length})</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Platform Filter */}
+              <div>
+                <label className="text-[11px] font-bold text-neutral-500 mb-1 block">Platform (RTA)</label>
+                <select
+                  value={selectedPlatform}
+                  onChange={(e) => setSelectedPlatform(e.target.value)}
+                  className="w-full px-3 py-1.5 rounded-xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-neutral-900 dark:text-white focus:outline-none font-medium"
+                >
+                  <option value="ALL">All Platforms ({platforms.length})</option>
+                  {platforms.map((p) => (
+                    <option key={p} value={p}>{p} ({PORTFOLIO_HOLDINGS.filter(h => h.platform === p).length})</option>
+                  ))}
+                </select>
               </div>
 
               {/* Category Filter */}
@@ -366,9 +430,9 @@ export const HoldingsTable: React.FC<HoldingsTableProps> = ({ onSelectFund }) =>
                   className="w-full px-3 py-1.5 rounded-xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 text-neutral-900 dark:text-white focus:outline-none"
                 >
                   <option value="ALL">All Action Tags</option>
-                  <option value="CORE_COMPOUNDER">Core Compounders</option>
-                  <option value="ALPHA_ENGINE">Alpha Engines</option>
-                  <option value="DEFENSIVE_SHIELD">Defensive Shields</option>
+                  <option value="TOP_PERFORMER">Top Performers</option>
+                  <option value="STABLE_CORE">Stable Core</option>
+                  <option value="WATCHLIST">Watchlist</option>
                   <option value="STP_REBALANCE_CANDIDATE">STP Exits Candidates</option>
                 </select>
               </div>
@@ -432,26 +496,31 @@ export const HoldingsTable: React.FC<HoldingsTableProps> = ({ onSelectFund }) =>
 
       {/* 21-Column Master Holdings Table */}
       <div className="rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-md overflow-hidden">
-        <div className="p-3 bg-neutral-50 dark:bg-neutral-950 border-b border-neutral-200 dark:border-neutral-800 flex items-center justify-between text-xs">
+        <div className="p-3 bg-neutral-50 dark:bg-neutral-950 border-b border-neutral-200 dark:border-neutral-800 flex flex-col sm:flex-row sm:items-center justify-between text-xs gap-2">
           <span className="font-bold text-neutral-900 dark:text-white">Showing {filteredHoldings.length} Funds (Sorted by {String(sortField).toUpperCase()} {sortOrder.toUpperCase()})</span>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             {liveFunds.length > 0 && (
               <span className="flex items-center gap-1 px-2 py-0.5 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 font-bold text-[10px]">
-                <Zap className="w-3 h-3" /> Live data from {liveFunds.length} Tickertape schemes
+                <Zap className="w-3 h-3" /> Live data from {liveFunds.length} schemes
               </span>
             )}
-            <span className="text-neutral-500">Click column headers to sort ascending / descending</span>
+            <span className="text-neutral-500 hidden sm:inline">Click headers to sort</span>
           </div>
         </div>
 
-        <div className="overflow-x-auto max-h-[650px]">
+        <div className="overflow-x-auto max-h-[650px] table-scroll-container">
           <table className="mono-table">
             <thead>
               <tr className="sticky top-0 z-10">
                 <th className="cursor-pointer" onClick={() => handleSort('name')}>Scheme Name {sortField === 'name' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}</th>
+                <th className="cursor-pointer" onClick={() => handleSort('investorName')}>Investor {sortField === 'investorName' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}</th>
+                <th className="cursor-pointer" onClick={() => handleSort('platform')}>Platform {sortField === 'platform' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}</th>
                 <th className="cursor-pointer" onClick={() => handleSort('category')}>Category {sortField === 'category' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}</th>
-                <th className="text-right cursor-pointer" onClick={() => handleSort('amountLakhs')}>Invested (₹L) {sortField === 'amountLakhs' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}</th>
-                <th className="text-right cursor-pointer" onClick={() => handleSort('returnPct')}>Dad's XIRR % {sortField === 'returnPct' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}</th>
+                <th>Folio</th>
+                <th className="text-right cursor-pointer" onClick={() => handleSort('costValueInr')}>Cost (₹L) {sortField === 'costValueInr' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}</th>
+                <th className="text-right cursor-pointer" onClick={() => handleSort('amountLakhs')}>Current (₹L) {sortField === 'amountLakhs' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}</th>
+                <th className="text-right cursor-pointer" onClick={() => handleSort('appreciationInr')}>Gain (₹L) {sortField === 'appreciationInr' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}</th>
+                <th className="text-right cursor-pointer" onClick={() => handleSort('returnPct')}>Real XIRR % {sortField === 'returnPct' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}</th>
                 <th className="text-right cursor-pointer" onClick={() => handleSort('cagr1y')}>1Y CAGR {sortField === 'cagr1y' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}</th>
                 <th className="text-right cursor-pointer" onClick={() => handleSort('cagr3y')}>3Y CAGR {sortField === 'cagr3y' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}</th>
                 <th className="text-right cursor-pointer" onClick={() => handleSort('cagr5y')}>5Y CAGR {sortField === 'cagr5y' ? (sortOrder === 'asc' ? '↑' : '↓') : ''}</th>
@@ -491,6 +560,7 @@ export const HoldingsTable: React.FC<HoldingsTableProps> = ({ onSelectFund }) =>
                 const liveAlpha   = liveMatch?.alpha   ?? null;
                 const liveAum     = liveMatch?.aum     ?? null;
 
+                const isPrem = fund.investorName?.includes('Prem') && !fund.investorName?.includes('Sarita');
 
                 return (
                   <tr key={fund.id} className="hover:bg-neutral-100 dark:hover:bg-neutral-900 transition">
@@ -499,14 +569,41 @@ export const HoldingsTable: React.FC<HoldingsTableProps> = ({ onSelectFund }) =>
                       <p className="text-[10px] text-neutral-500 mt-0.5">{fund.amc}</p>
                       {liveMatch && <span className="text-[9px] text-emerald-500 font-bold">⚡ Live</span>}
                     </td>
+                    <td className="whitespace-nowrap">
+                      <span className={`chip text-[10px] py-0.5 px-2 font-bold ${
+                        isPrem
+                          ? 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/30'
+                          : 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/30'
+                      }`}>
+                        {isPrem ? 'Prem' : 'Sarita'}
+                      </span>
+                    </td>
+                    <td className="whitespace-nowrap">
+                      <span className={`chip text-[10px] py-0.5 px-2 font-bold ${
+                        fund.platform === 'CAMPS'
+                          ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30'
+                          : 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30'
+                      }`}>
+                        {fund.platform}
+                      </span>
+                    </td>
                     <td>
                       <span className="chip text-[10px] py-0 px-2 font-medium">{fund.category}</span>
                     </td>
-                    <td className="text-right font-black text-neutral-900 dark:text-white">
+                    <td className="text-neutral-500 text-[11px] font-mono whitespace-nowrap">
+                      {fund.folioNumber || '—'}
+                    </td>
+                    <td className="text-right text-xs font-semibold text-neutral-600 dark:text-neutral-400 whitespace-nowrap">
+                      ₹{(fund.costValueInr / 100000).toFixed(2)}L
+                    </td>
+                    <td className="text-right font-black text-neutral-900 dark:text-white whitespace-nowrap">
                       ₹{fund.amountLakhs.toFixed(2)}L
                     </td>
-                    {/* Dad's Realized XIRR - KEPT AS-IS */}
-                    <td className={`text-right font-black ${fund.returnPct >= 15 ? 'text-emerald-600 dark:text-emerald-400' : 'text-neutral-700 dark:text-neutral-300'}`}>
+                    <td className={`text-right font-bold text-xs whitespace-nowrap ${fund.appreciationInr >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`}>
+                      {fund.appreciationInr >= 0 ? '+' : ''}₹{(fund.appreciationInr / 100000).toFixed(2)}L
+                    </td>
+                    {/* Realized XIRR */}
+                    <td className={`text-right font-black whitespace-nowrap ${fund.returnPct >= 15 ? 'text-emerald-600 dark:text-emerald-400' : 'text-neutral-700 dark:text-neutral-300'}`}>
                       {fund.returnPct > 0 ? `+${fund.returnPct}%` : `${fund.returnPct}%`}
                     </td>
                     {/* Live 1Y CAGR */}

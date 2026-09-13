@@ -18,22 +18,22 @@ export const FundGraphView: React.FC<FundGraphViewProps> = ({ fund, onClose }) =
   const sipData = fund.history?.sip_series || [];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
       <div 
-        className="bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 rounded-3xl max-w-4xl w-full p-6 shadow-2xl relative text-neutral-900 dark:text-neutral-100 max-h-[94vh] overflow-y-auto"
+        className="bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 rounded-3xl max-w-4xl w-full p-4 sm:p-6 shadow-2xl relative text-neutral-900 dark:text-neutral-100 max-h-[94vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-5 right-5 p-2 text-neutral-400 hover:text-neutral-900 dark:hover:text-white rounded-xl transition"
+          className="absolute top-3.5 right-3.5 sm:top-5 sm:right-5 p-2 text-neutral-400 hover:text-neutral-900 dark:hover:text-white rounded-xl transition"
         >
           <X className="w-5 h-5" />
         </button>
 
         {/* Header Section */}
         <div className="mb-4 pr-10">
-          <div className="flex flex-wrap items-center gap-2 mb-1.5">
+          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mb-1.5">
             <span className="chip">
               {fund.category || 'Equity'}
             </span>
@@ -48,12 +48,12 @@ export const FundGraphView: React.FC<FundGraphViewProps> = ({ fund, onClose }) =
               </span>
             )}
           </div>
-          <h2 className="text-xl sm:text-2xl font-black text-neutral-900 dark:text-white">{fund.label}</h2>
+          <h2 className="text-lg sm:text-2xl font-black text-neutral-900 dark:text-white">{fund.label}</h2>
           <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">{fund.schemeName || 'Direct Plan Growth'}</p>
 
           {/* Live Web Verification Links */}
-          <div className="flex flex-wrap items-center gap-2 mt-3 text-xs">
-            <span className="text-neutral-500 font-medium">Verify Live Data:</span>
+          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mt-2.5 text-xs">
+            <span className="text-neutral-500 font-medium">Verify Live:</span>
             <a
               href={`https://groww.in/search?q=${encodeURIComponent(fund.label)}`}
               target="_blank"
@@ -82,34 +82,34 @@ export const FundGraphView: React.FC<FundGraphViewProps> = ({ fund, onClose }) =
         </div>
 
         {/* Quick KPI Stat Chips */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-          <div className="p-3.5 rounded-2xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3 mb-4 sm:mb-6">
+          <div className="p-3 sm:p-3.5 rounded-2xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800">
             <p className="text-[11px] text-neutral-500 font-medium">Latest NAV</p>
-            <p className="text-lg font-black text-neutral-900 dark:text-white mt-0.5">
+            <p className="text-base sm:text-lg font-black text-neutral-900 dark:text-white mt-0.5">
               {fund.nav != null ? `₹${fund.nav.toFixed(2)}` : '—'}
             </p>
             <p className="text-[10px] text-neutral-400 mt-0.5">{fund.navDate || 'Latest'}</p>
           </div>
 
-          <div className="p-3.5 rounded-2xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800">
+          <div className="p-3 sm:p-3.5 rounded-2xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800">
             <p className="text-[11px] text-neutral-500 font-medium">3Y CAGR</p>
-            <p className="text-lg font-black text-emerald-600 dark:text-emerald-400 mt-0.5">
+            <p className="text-base sm:text-lg font-black text-emerald-600 dark:text-emerald-400 mt-0.5">
               {fund.y3 != null ? `${fund.y3.toFixed(1)}%` : '—'}
             </p>
             <p className="text-[10px] text-neutral-400 mt-0.5">3Y XIRR: {fund.x3 != null ? `${fund.x3.toFixed(1)}%` : '—'}</p>
           </div>
 
-          <div className="p-3.5 rounded-2xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800">
-            <p className="text-[11px] text-neutral-500 font-medium">Sharpe / Sortino (3Y)</p>
-            <p className="text-lg font-black text-neutral-900 dark:text-white mt-0.5">
+          <div className="p-3 sm:p-3.5 rounded-2xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800">
+            <p className="text-[11px] text-neutral-500 font-medium">Sharpe / Sortino</p>
+            <p className="text-base sm:text-lg font-black text-neutral-900 dark:text-white mt-0.5">
               {fund.sharpe3 != null ? fund.sharpe3.toFixed(2) : '—'} / {fund.sort3 != null ? fund.sort3.toFixed(2) : '—'}
             </p>
             <p className="text-[10px] text-neutral-400 mt-0.5">Beta: {fund.beta3 != null ? fund.beta3.toFixed(2) : '—'}</p>
           </div>
 
-          <div className="p-3.5 rounded-2xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800">
+          <div className="p-3 sm:p-3.5 rounded-2xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800">
             <p className="text-[11px] text-neutral-500 font-medium">AUM (Fund Size)</p>
-            <p className="text-lg font-black text-neutral-900 dark:text-white mt-0.5">
+            <p className="text-base sm:text-lg font-black text-neutral-900 dark:text-white mt-0.5">
               {fund.aum != null ? `₹${(fund.aum).toFixed(0)} Cr` : '—'}
             </p>
             <p className="text-[10px] text-neutral-400 mt-0.5">Rating: {fund.rating || '★ 4/5'}</p>
@@ -117,47 +117,45 @@ export const FundGraphView: React.FC<FundGraphViewProps> = ({ fund, onClose }) =
         </div>
 
         {/* Chart View Switcher */}
-        <div className="flex items-center justify-between border-b border-neutral-200 dark:border-neutral-800 pb-3 mb-4">
-          <div className="flex space-x-2">
-            <button
-              onClick={() => setActiveChart('nav')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition ${
-                activeChart === 'nav'
-                  ? 'bg-black dark:bg-white text-white dark:text-black'
-                  : 'text-neutral-500 hover:text-neutral-900 dark:hover:text-white'
-              }`}
-            >
-              Historic NAV Trend ({navData.length} pts)
-            </button>
-            <button
-              onClick={() => setActiveChart('roll')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition ${
-                activeChart === 'roll'
-                  ? 'bg-black dark:bg-white text-white dark:text-black'
-                  : 'text-neutral-500 hover:text-neutral-900 dark:hover:text-white'
-              }`}
-            >
-              3Y Rolling Return Trend ({rollData.length} pts)
-            </button>
-            <button
-              onClick={() => setActiveChart('sip')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition ${
-                activeChart === 'sip'
-                  ? 'bg-black dark:bg-white text-white dark:text-black'
-                  : 'text-neutral-500 hover:text-neutral-900 dark:hover:text-white'
-              }`}
-            >
-              ₹10k/mo SIP Wealth Curve ({sipData.length} pts)
-            </button>
-          </div>
+        <div className="flex overflow-x-auto gap-1.5 pb-2 scrollbar-none touch-pan-x border-b border-neutral-200 dark:border-neutral-800 mb-4">
+          <button
+            onClick={() => setActiveChart('nav')}
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex-shrink-0 whitespace-nowrap ${
+              activeChart === 'nav'
+                ? 'bg-black dark:bg-white text-white dark:text-black'
+                : 'text-neutral-500 hover:text-neutral-900 dark:hover:text-white'
+            }`}
+          >
+            Historic NAV Trend ({navData.length} pts)
+          </button>
+          <button
+            onClick={() => setActiveChart('roll')}
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex-shrink-0 whitespace-nowrap ${
+              activeChart === 'roll'
+                ? 'bg-black dark:bg-white text-white dark:text-black'
+                : 'text-neutral-500 hover:text-neutral-900 dark:hover:text-white'
+            }`}
+          >
+            3Y Rolling Return Trend ({rollData.length} pts)
+          </button>
+          <button
+            onClick={() => setActiveChart('sip')}
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex-shrink-0 whitespace-nowrap ${
+              activeChart === 'sip'
+                ? 'bg-black dark:bg-white text-white dark:text-black'
+                : 'text-neutral-500 hover:text-neutral-900 dark:hover:text-white'
+            }`}
+          >
+            ₹10k/mo SIP Wealth Curve ({sipData.length} pts)
+          </button>
         </div>
 
         {/* Real Historic Chart Container */}
-        <div className="p-4 rounded-2xl bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 mb-6">
-          <div className="h-72 sm:h-80">
+        <div className="p-2 sm:p-4 rounded-2xl bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 mb-4 sm:mb-6">
+          <div className="h-64 sm:h-80">
             {activeChart === 'nav' && navData.length > 0 && (
               <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={navData}>
+                <AreaChart data={navData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                   <defs>
                     <linearGradient id="navGrad" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="5%" stopColor="#10b981" stopOpacity={0.4}/>
@@ -174,7 +172,7 @@ export const FundGraphView: React.FC<FundGraphViewProps> = ({ fund, onClose }) =
 
             {activeChart === 'roll' && rollData.length > 0 && (
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={rollData}>
+                <LineChart data={rollData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                   <XAxis dataKey="date" stroke="#94a3b8" tick={{ fontSize: 10, fill: '#94a3b8' }} />
                   <YAxis stroke="#94a3b8" tick={{ fontSize: 10, fill: '#94a3b8' }} />
                   <Tooltip contentStyle={{ backgroundColor: '#09090b', borderColor: '#27272a', borderRadius: '0.5rem', color: '#f8fafc' }} />
@@ -185,7 +183,7 @@ export const FundGraphView: React.FC<FundGraphViewProps> = ({ fund, onClose }) =
 
             {activeChart === 'sip' && sipData.length > 0 && (
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={sipData}>
+                <LineChart data={sipData} margin={{ top: 10, right: 10, left: -15, bottom: 0 }}>
                   <XAxis dataKey="date" stroke="#94a3b8" tick={{ fontSize: 10, fill: '#94a3b8' }} />
                   <YAxis stroke="#94a3b8" tick={{ fontSize: 10, fill: '#94a3b8' }} />
                   <Tooltip contentStyle={{ backgroundColor: '#09090b', borderColor: '#27272a', borderRadius: '0.5rem', color: '#f8fafc' }} />

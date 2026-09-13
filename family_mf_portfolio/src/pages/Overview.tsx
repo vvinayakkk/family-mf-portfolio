@@ -113,7 +113,7 @@ export const Overview: React.FC<OverviewProps> = ({ onNavigateToHoldings, onNavi
   return (
     <div className="space-y-6 animate-fadeIn pb-16">
       {/* 1. Executive Wealth Ticker Ribbon */}
-      <div className="p-6 rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-md">
+      <div className="p-4 sm:p-6 rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-md">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div>
             <div className="flex items-center space-x-2 mb-1">
@@ -124,33 +124,34 @@ export const Overview: React.FC<OverviewProps> = ({ onNavigateToHoldings, onNavi
                 13 Categories
               </span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-black text-neutral-900 dark:text-white tracking-tight">
+            <h1 className="text-xl sm:text-3xl font-black text-neutral-900 dark:text-white tracking-tight">
               Family Wealth Command Terminal
             </h1>
           </div>
 
-          <div className="flex flex-wrap items-center gap-4 text-xs">
-            <div className="px-4 py-2 rounded-xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800">
+          <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-2.5 sm:gap-4 text-xs">
+            <div className="p-3 sm:px-4 sm:py-2 rounded-xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800">
               <p className="text-[10px] text-neutral-500 font-medium">Total Net Asset Value</p>
-              <p className="text-lg font-black text-neutral-900 dark:text-white">₹7.93 Cr <span className="text-[10px] text-neutral-400 font-normal">(₹793.44L)</span></p>
+              <p className="text-base sm:text-lg font-black text-neutral-900 dark:text-white">₹{(TOTAL_PORTFOLIO_VALUE_LAKHS / 100).toFixed(2)} Cr</p>
+              <p className="text-[10px] text-neutral-400">₹{TOTAL_PORTFOLIO_VALUE_LAKHS.toFixed(1)}L</p>
             </div>
 
-            <div className="px-4 py-2 rounded-xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800">
+            <div className="p-3 sm:px-4 sm:py-2 rounded-xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800">
               <p className="text-[10px] text-neutral-500 font-medium flex items-center gap-1">
                 Weighted 3Y CAGR
                 {isLiveReturn && <span className="text-emerald-500 font-black">⚡ Live</span>}
               </p>
-              <p className="text-lg font-black text-emerald-600 dark:text-emerald-400">+{weightedReturn.toFixed(2)}%</p>
+              <p className="text-base sm:text-lg font-black text-emerald-600 dark:text-emerald-400">+{weightedReturn.toFixed(2)}%</p>
             </div>
 
-            <div className="px-4 py-2 rounded-xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800">
+            <div className="p-3 sm:px-4 sm:py-2 rounded-xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800">
               <p className="text-[10px] text-neutral-500 font-medium">Active Schemes</p>
-              <p className="text-lg font-black text-neutral-900 dark:text-white">91 Holdings</p>
+              <p className="text-base sm:text-lg font-black text-neutral-900 dark:text-white">{PORTFOLIO_HOLDINGS.length} Holdings</p>
             </div>
 
             <button
               onClick={onNavigateToStp}
-              className="px-4 py-2.5 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white shadow-sm transition active:scale-95 flex items-center space-x-1.5"
+              className="col-span-2 sm:col-span-1 px-4 py-2.5 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white shadow-sm transition active:scale-95 flex items-center justify-center space-x-1.5"
             >
               <Zap className="w-4 h-4" />
               <span>STP Rebalance</span>
@@ -164,18 +165,18 @@ export const Overview: React.FC<OverviewProps> = ({ onNavigateToHoldings, onNavi
         {/* LEFT AREA (65%): Macro Stress Testing & Historical Multi-Decade Probabilities */}
         <div className="lg:col-span-7 space-y-6">
           {/* Macro Market Stress Testing Simulator */}
-          <div className="p-6 rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-md space-y-4">
+          <div className="p-4 sm:p-6 rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-md space-y-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div>
                 <h3 className="font-extrabold text-base text-neutral-900 dark:text-white flex items-center gap-2">
                   <Activity className="w-4 h-4 text-emerald-600 dark:text-emerald-400" /> Macro Market Cycle Stress Simulator
                 </h3>
-                <p className="text-xs text-neutral-500">Simulating historical crash resilience & rebound velocity on your ₹7.93 Cr portfolio</p>
+                <p className="text-xs text-neutral-500">Simulating historical crash resilience & rebound velocity on your ₹{(TOTAL_PORTFOLIO_VALUE_LAKHS / 100).toFixed(2)} Cr portfolio</p>
               </div>
             </div>
 
             {/* Scenario Selector Tabs */}
-            <div className="flex items-center space-x-2 text-xs overflow-x-auto pb-1 scrollbar-none">
+            <div className="flex items-center space-x-2 text-xs overflow-x-auto pb-1 scrollbar-none touch-pan-x">
               {[
                 { id: 'covid2020', label: '2020 Covid (-32.5%)' },
                 { id: 'crash2008', label: '2008 GFC (-45.0%)' },
@@ -231,7 +232,7 @@ export const Overview: React.FC<OverviewProps> = ({ onNavigateToHoldings, onNavi
           </div>
 
           {/* Multi-Decade Holding Horizon Probability Distribution */}
-          <div className="p-6 rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-md space-y-4">
+          <div className="p-4 sm:p-6 rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-md space-y-4">
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="font-extrabold text-base text-neutral-900 dark:text-white flex items-center gap-2">
@@ -269,11 +270,11 @@ export const Overview: React.FC<OverviewProps> = ({ onNavigateToHoldings, onNavi
           </div>
 
           {/* Category Breakdown Bar List */}
-          <div className="p-6 rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-md space-y-3">
+          <div className="p-4 sm:p-6 rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-md space-y-3">
             <div className="flex items-center justify-between">
               <h3 className="font-extrabold text-base text-neutral-900 dark:text-white">Category Allocation Breakdown</h3>
               <button onClick={onNavigateToHoldings} className="text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:underline">
-                View 91 Holdings
+                View {PORTFOLIO_HOLDINGS.length} Holdings
               </button>
             </div>
 
@@ -297,7 +298,7 @@ export const Overview: React.FC<OverviewProps> = ({ onNavigateToHoldings, onNavi
         {/* RIGHT AREA (35%): Action Queue, Laggards, Stock Look-Through */}
         <div className="lg:col-span-5 space-y-6">
           {/* Rebalance Action Queue */}
-          <div className="p-6 rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-md space-y-4">
+          <div className="p-4 sm:p-6 rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-md space-y-4">
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="font-extrabold text-base text-neutral-900 dark:text-white flex items-center gap-2">
@@ -346,13 +347,13 @@ export const Overview: React.FC<OverviewProps> = ({ onNavigateToHoldings, onNavi
           </div>
 
           {/* Top Stock Look-Through Exposure */}
-          <div className="p-6 rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-md space-y-3">
+          <div className="p-4 sm:p-6 rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-md space-y-3">
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="font-extrabold text-base text-neutral-900 dark:text-white flex items-center gap-2">
                   <Layers className="w-4 h-4 text-emerald-600 dark:text-emerald-400" /> Stock Exposure Look-Through
                 </h3>
-                <p className="text-xs text-neutral-500">Top underlying stock holdings across 91 funds</p>
+                <p className="text-xs text-neutral-500">Top underlying stock holdings across {PORTFOLIO_HOLDINGS.length} portfolio funds</p>
               </div>
               <button onClick={onNavigateToOverlap} className="text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:underline">
                 Full Heatmap

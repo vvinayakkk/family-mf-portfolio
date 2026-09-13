@@ -27,33 +27,56 @@ export const FundModal: React.FC<FundModalProps> = ({ fund, onClose, onSelectStp
   const isStpCandidate = fund.actionTag === 'STP_REBALANCE_CANDIDATE';
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
       <div 
-        className="bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 rounded-3xl max-w-3xl w-full p-6 shadow-2xl relative text-neutral-900 dark:text-neutral-100 max-h-[92vh] overflow-y-auto"
+        className="bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 rounded-3xl max-w-3xl w-full p-4 sm:p-6 shadow-2xl relative text-neutral-900 dark:text-neutral-100 max-h-[92vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-5 right-5 p-2 text-neutral-400 hover:text-neutral-900 dark:hover:text-white rounded-xl transition"
+          className="absolute top-3.5 right-3.5 sm:top-5 sm:right-5 p-2 text-neutral-400 hover:text-neutral-900 dark:hover:text-white rounded-xl transition"
         >
           <X className="w-5 h-5" />
         </button>
 
         {/* Header Section */}
-        <div className="mb-4 pr-8">
-          <div className="flex flex-wrap items-center gap-2 mb-1.5">
+        <div className="mb-4 pr-10 sm:pr-8">
+          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mb-1.5">
+            {fund.investorName && (
+              <span className={`chip font-bold ${
+                fund.investorName.includes('Prem') && !fund.investorName.includes('Sarita')
+                  ? 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/30'
+                  : 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/30'
+              }`}>
+                👤 {fund.investorName}
+              </span>
+            )}
+            {fund.platform && (
+              <span className={`chip font-bold ${
+                fund.platform === 'CAMPS'
+                  ? 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30'
+                  : 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30'
+              }`}>
+                🏛️ {fund.platform}
+              </span>
+            )}
             <span className="chip">
               {fund.category}
             </span>
             <span className="chip">
               {fund.amc}
             </span>
+            {fund.folioNumber && (
+              <span className="chip font-mono text-[11px]">
+                Folio: {fund.folioNumber}
+              </span>
+            )}
             <span className="chip font-bold">
               Direct Growth Plan
             </span>
           </div>
-          <h2 className="text-xl sm:text-2xl font-black text-neutral-900 dark:text-white">{fund.name}</h2>
+          <h2 className="text-lg sm:text-2xl font-black text-neutral-900 dark:text-white">{fund.name}</h2>
           
           <div className="flex flex-wrap items-center gap-2 mt-2">
             {fund.actionTag === 'TOP_PERFORMER' && (
@@ -127,9 +150,9 @@ export const FundModal: React.FC<FundModalProps> = ({ fund, onClose, onSelectStp
               </div>
             </div>
 
-            <div className="p-4 rounded-2xl bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800">
+            <div className="p-3.5 sm:p-4 rounded-2xl bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800">
               <h4 className="text-xs font-bold text-neutral-500 uppercase tracking-wider mb-2">Historical CAGRs</h4>
-              <div className="grid grid-cols-6 gap-2 text-center text-xs">
+              <div className="grid grid-cols-3 sm:grid-cols-6 gap-1.5 sm:gap-2 text-center text-xs">
                 {[
                   { label: '1Y', val: fund.cagr1y },
                   { label: '3Y', val: fund.cagr3y },
@@ -260,35 +283,35 @@ export const FundModal: React.FC<FundModalProps> = ({ fund, onClose, onSelectStp
         )}
 
         {/* Action buttons */}
-        <div className="flex items-center justify-between pt-4 mt-6 border-t border-neutral-200 dark:border-neutral-800">
+        <div className="flex flex-col-reverse sm:flex-row sm:items-center justify-between gap-2.5 pt-4 mt-6 border-t border-neutral-200 dark:border-neutral-800">
           {onOpenGraph && (
             <button
               onClick={() => {
                 onClose();
                 onOpenGraph(fund.name);
               }}
-              className="px-4 py-2 text-xs font-bold rounded-xl bg-neutral-100 dark:bg-neutral-900 hover:bg-neutral-200 dark:hover:bg-neutral-800 text-neutral-900 dark:text-white border border-neutral-200 dark:border-neutral-800 transition flex items-center space-x-1.5"
+              className="w-full sm:w-auto justify-center px-4 py-2 text-xs font-bold rounded-xl bg-neutral-100 dark:bg-neutral-900 hover:bg-neutral-200 dark:hover:bg-neutral-800 text-neutral-900 dark:text-white border border-neutral-200 dark:border-neutral-800 transition flex items-center space-x-1.5"
             >
               <ChartIcon className="w-3.5 h-3.5" />
               <span>View Time-Series NAV Graph</span>
             </button>
           )}
 
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center justify-end space-x-2 sm:space-x-3 w-full sm:w-auto">
             {onSelectStp && isStpCandidate && (
               <button
                 onClick={() => {
                   onClose();
                   onSelectStp(fund);
                 }}
-                className="px-4 py-2 text-xs font-bold rounded-xl bg-black dark:bg-white text-white dark:text-black shadow-sm transition"
+                className="flex-1 sm:flex-none px-4 py-2 text-xs font-bold rounded-xl bg-black dark:bg-white text-white dark:text-black shadow-sm transition"
               >
                 Simulate STP
               </button>
             )}
             <button
               onClick={onClose}
-              className="px-4 py-2 text-xs font-bold rounded-xl bg-neutral-100 dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition"
+              className="flex-1 sm:flex-none px-4 py-2 text-xs font-bold rounded-xl bg-neutral-100 dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition text-center"
             >
               Close
             </button>

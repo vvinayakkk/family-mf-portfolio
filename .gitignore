@@ -26,3 +26,13 @@ pnpm-debug.log*
 .idea/
 .DS_Store
 Thumbs.db
+
+# Workspace experiments & agents
+.agents/
+onefi-mf-emi/
+reference_mf/
+tp1/
+
+# Local CSV data files (never commit)
+*.csv
+*/*.csv

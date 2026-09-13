@@ -45,7 +45,7 @@ export const StockOverlapHeatmap: React.FC<StockOverlapHeatmapProps> = ({ onSele
         </div>
         <h2 className="text-xl sm:text-2xl font-extrabold text-neutral-900 dark:text-white">Portfolio-Wide Stock Overlap Heatmap</h2>
         <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1 max-w-3xl">
-          Look through all 91 mutual fund schemes to see total capital exposure held in individual stocks across your family wealth.
+          Look through all {PORTFOLIO_HOLDINGS.length} mutual fund schemes to see total capital exposure held in individual stocks across your family wealth.
         </p>
       </div>
 

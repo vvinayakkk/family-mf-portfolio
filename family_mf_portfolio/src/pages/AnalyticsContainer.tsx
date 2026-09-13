@@ -119,25 +119,25 @@ const PortfolioHealthScore: React.FC<{ enriched: ReturnType<typeof useLiveEnrich
   return (
     <div className="space-y-6 animate-fadeIn">
       {/* Score Hero */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
         {/* Overall Score */}
-        <div className="lg:col-span-1 p-6 rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-md flex flex-col items-center justify-center text-center gap-3">
+        <div className="lg:col-span-1 p-4 sm:p-6 rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-md flex flex-col items-center justify-center text-center gap-3">
           <p className="text-xs font-bold text-neutral-500 uppercase tracking-wider">Portfolio Health Score</p>
-          <div className={`text-7xl font-black ${metrics.gradeColor}`}>{metrics.grade}</div>
-          <div className="text-4xl font-extrabold text-neutral-900 dark:text-white">{metrics.overallScore.toFixed(0)}<span className="text-xl text-neutral-400">/100</span></div>
-          <p className="text-xs text-neutral-500 max-w-[180px]">Composite across 6 institutional dimensions across all 91 holdings</p>
+          <div className={`text-6xl sm:text-7xl font-black ${metrics.gradeColor}`}>{metrics.grade}</div>
+          <div className="text-3xl sm:text-4xl font-extrabold text-neutral-900 dark:text-white">{metrics.overallScore.toFixed(0)}<span className="text-xl text-neutral-400">/100</span></div>
+          <p className="text-xs text-neutral-500 max-w-[200px]">Composite across 6 institutional dimensions across all {PORTFOLIO_HOLDINGS.length} holdings</p>
           <div className="w-full bg-neutral-100 dark:bg-neutral-900 rounded-full h-2.5">
             <div className="h-2.5 rounded-full bg-emerald-500 transition-all" style={{ width: `${metrics.overallScore}%` }} />
           </div>
         </div>
 
         {/* Radar Chart */}
-        <div className="lg:col-span-2 p-6 rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-md">
+        <div className="lg:col-span-2 p-4 sm:p-6 rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-md">
           <h3 className="font-bold text-sm text-neutral-900 dark:text-white mb-3 flex items-center gap-2">
             <Target className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
             6-Dimension Health Radar
           </h3>
-          <div className="h-64">
+          <div className="h-60 sm:h-64">
             <ResponsiveContainer width="100%" height="100%">
               <RadarChart data={metrics.radarData}>
                 <PolarGrid stroke={ct.grid} />
@@ -150,21 +150,21 @@ const PortfolioHealthScore: React.FC<{ enriched: ReturnType<typeof useLiveEnrich
       </div>
 
       {/* 6 Dimension Breakdown */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-4">
         {dims.map(d => {
           const isGood = d.score >= d.threshold;
           const barColor = isGood ? 'bg-emerald-500' : d.score >= d.threshold - 15 ? 'bg-amber-500' : 'bg-rose-500';
           return (
-            <div key={d.label} className="p-4 rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-sm space-y-2">
+            <div key={d.label} className="p-3 sm:p-4 rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-sm space-y-1.5 sm:space-y-2">
               <div className="flex items-center justify-between text-xs">
-                <span className="font-bold text-neutral-700 dark:text-neutral-300">{d.label}</span>
+                <span className="font-bold text-neutral-700 dark:text-neutral-300 truncate max-w-[110px] sm:max-w-none">{d.label}</span>
                 {isGood
-                  ? <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-                  : <XCircle className="w-4 h-4 text-rose-500" />}
+                  ? <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0" />
+                  : <XCircle className="w-4 h-4 text-rose-500 flex-shrink-0" />}
               </div>
               <div className="flex items-end justify-between">
-                <span className="text-2xl font-extrabold text-neutral-900 dark:text-white">{d.score.toFixed(0)}</span>
-                <span className="text-xs font-bold text-neutral-500">{d.raw}</span>
+                <span className="text-xl sm:text-2xl font-extrabold text-neutral-900 dark:text-white">{d.score.toFixed(0)}</span>
+                <span className="text-[10px] sm:text-xs font-bold text-neutral-500">{d.raw}</span>
               </div>
               <div className="w-full bg-neutral-100 dark:bg-neutral-900 rounded-full h-1.5">
                 <div className={`h-1.5 rounded-full transition-all ${barColor}`} style={{ width: `${Math.min(d.score, 100)}%` }} />
@@ -176,12 +176,12 @@ const PortfolioHealthScore: React.FC<{ enriched: ReturnType<typeof useLiveEnrich
 
       {/* Bottom 5 laggards */}
       <div className="rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-md overflow-hidden">
-        <div className="p-4 bg-neutral-50 dark:bg-neutral-950 border-b border-neutral-200 dark:border-neutral-800">
+        <div className="p-3.5 sm:p-4 bg-neutral-50 dark:bg-neutral-950 border-b border-neutral-200 dark:border-neutral-800">
           <h4 className="font-bold text-sm text-neutral-900 dark:text-white flex items-center gap-2">
             <XCircle className="w-4 h-4 text-rose-500" /> Weakest Funds by Composite Score (STP Candidates)
           </h4>
         </div>
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto table-scroll-container">
           <table className="mono-table">
             <thead><tr className="sticky top-0 z-10">
               <th>Fund</th><th className="text-center">Sharpe</th><th className="text-center">Alpha</th>
@@ -260,12 +260,12 @@ const RiskRewardView: React.FC<{ enriched: ReturnType<typeof useLiveEnrichedHold
       </div>
 
       {/* Scatter Chart */}
-      <div className="p-6 rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-md">
+      <div className="p-4 sm:p-6 rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-md">
         <h3 className="font-bold text-sm text-neutral-900 dark:text-white mb-1">Volatility (X) vs Sharpe Ratio (Y) — Bubble Size = Capital Invested</h3>
         <p className="text-xs text-neutral-500 mb-4">Top-right = high alpha; Bottom-left = defensive; Bottom-right = exit candidates</p>
-        <div className="h-80">
+        <div className="h-64 sm:h-80">
           <ResponsiveContainer width="100%" height="100%">
-            <ScatterChart margin={{ top: 10, right: 30, bottom: 20, left: 0 }}>
+            <ScatterChart margin={{ top: 10, right: 15, bottom: 20, left: -10 }}>
               <CartesianGrid strokeDasharray="3 3" stroke={ct.grid} />
               <XAxis type="number" dataKey="x" name="Volatility" stroke={ct.axis} fontSize={11} label={{ value: 'Volatility (σ%)', position: 'insideBottom', offset: -10, fill: ct.axis, fontSize: 11 }} domain={['auto', 'auto']} />
               <YAxis type="number" dataKey="y" name="Sharpe" stroke={ct.axis} fontSize={11} label={{ value: 'Sharpe Ratio', angle: -90, position: 'insideLeft', fill: ct.axis, fontSize: 11 }} domain={['auto', 'auto']} />
@@ -531,17 +531,17 @@ const AmcConcentration: React.FC<{ enriched: ReturnType<typeof useLiveEnrichedHo
 
       {/* Stock Overlap Grid */}
       <div className="rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-md overflow-hidden">
-        <div className="p-4 bg-neutral-50 dark:bg-neutral-950 border-b border-neutral-200 dark:border-neutral-800 flex items-center justify-between">
+        <div className="p-3.5 sm:p-4 bg-neutral-50 dark:bg-neutral-950 border-b border-neutral-200 dark:border-neutral-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <h4 className="font-bold text-sm text-neutral-900 dark:text-white flex items-center gap-2">
-            <Layers className="w-4 h-4 text-emerald-600 dark:text-emerald-400" /> Most Overlapping Stocks Across 91 Funds
+            <Layers className="w-4 h-4 text-emerald-600 dark:text-emerald-400" /> Most Overlapping Stocks Across {PORTFOLIO_HOLDINGS.length} Funds
           </h4>
           {duplicates.length > 0 && (
-            <button onClick={onNavigateToStp} className="px-3 py-1.5 rounded-xl bg-black dark:bg-white text-white dark:text-black text-xs font-bold flex items-center gap-1.5 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition">
+            <button onClick={onNavigateToStp} className="px-3 py-1.5 rounded-xl bg-black dark:bg-white text-white dark:text-black text-xs font-bold flex items-center gap-1.5 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition self-start sm:self-auto">
               <ArrowUpRight className="w-3.5 h-3.5" /> Consolidate via STP
             </button>
           )}
         </div>
-        <div className="overflow-x-auto max-h-72">
+        <div className="overflow-x-auto max-h-72 table-scroll-container">
           <table className="mono-table">
             <thead><tr className="sticky top-0 z-10">
               <th>Stock Name</th><th className="text-center">In # Funds</th><th className="text-right">Est. Capital</th><th className="text-right">% Wealth</th><th>Top Funds Holding</th>
@@ -594,42 +594,42 @@ const DrawdownStress: React.FC<{ enriched: ReturnType<typeof useLiveEnrichedHold
   return (
     <div className="space-y-6 animate-fadeIn">
       {/* KPI cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
-        <div className="p-5 rounded-2xl bg-rose-500/5 border border-rose-500/30">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 text-xs">
+        <div className="p-4 sm:p-5 rounded-2xl bg-rose-500/5 border border-rose-500/30">
           <p className="text-rose-500 font-bold uppercase tracking-wider mb-1">Portfolio Avg Max Drawdown</p>
-          <p className="text-3xl font-black text-rose-600 dark:text-rose-400">{avgDD.toFixed(1)}%</p>
+          <p className="text-2xl sm:text-3xl font-black text-rose-600 dark:text-rose-400">{avgDD.toFixed(1)}%</p>
           <p className="text-neutral-500 mt-1">Weighted across {withDD.length} funds with data</p>
         </div>
-        <div className="p-5 rounded-2xl bg-rose-500/5 border border-rose-500/30">
+        <div className="p-4 sm:p-5 rounded-2xl bg-rose-500/5 border border-rose-500/30">
           <p className="text-rose-500 font-bold uppercase tracking-wider mb-1">Worst Single Fund Drawdown</p>
-          <p className="text-3xl font-black text-rose-600 dark:text-rose-400">{worstDD.toFixed(1)}%</p>
-          <p className="text-neutral-500 mt-1">{withDD[0]?.name?.replace(' - Direct Growth', '').slice(0, 25)}...</p>
+          <p className="text-2xl sm:text-3xl font-black text-rose-600 dark:text-rose-400">{worstDD.toFixed(1)}%</p>
+          <p className="text-neutral-500 mt-1 truncate">{withDD[0]?.name?.replace(' - Direct Growth', '')}</p>
         </div>
-        <div className="p-5 rounded-2xl bg-amber-500/5 border border-amber-500/30">
+        <div className="p-4 sm:p-5 rounded-2xl bg-amber-500/5 border border-amber-500/30 sm:col-span-1 col-span-1">
           <p className="text-amber-500 font-bold uppercase tracking-wider mb-1">Capital at Peak-to-Trough Risk</p>
-          <p className="text-3xl font-black text-amber-600 dark:text-amber-400">₹{capitalAtRisk.toFixed(0)}L</p>
-          <p className="text-neutral-500 mt-1">If every fund hits its historic max drawdown simultaneously</p>
+          <p className="text-2xl sm:text-3xl font-black text-amber-600 dark:text-amber-400">₹{capitalAtRisk.toFixed(0)}L</p>
+          <p className="text-neutral-500 mt-1">If all funds hit historic max drawdown simultaneously</p>
         </div>
       </div>
 
       {/* Macro Stress Scenarios */}
-      <div className="p-6 rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-md space-y-3">
+      <div className="p-4 sm:p-6 rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-md space-y-3">
         <h3 className="font-bold text-sm text-neutral-900 dark:text-white flex items-center gap-2">
           <TrendingDown className="w-4 h-4 text-rose-500" /> Macro Stress Scenario Simulator
         </h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3">
           {scenarios.map(s => {
             const impact = TOTAL_PORTFOLIO_VALUE_LAKHS * (s.drop / 100);
             const newVal = TOTAL_PORTFOLIO_VALUE_LAKHS + impact;
             const isGain = s.drop > 0;
             return (
-              <div key={s.label} className={`p-4 rounded-2xl border text-xs space-y-2 ${isGain ? 'bg-emerald-500/5 border-emerald-500/30' : 'bg-rose-500/5 border-rose-500/30'}`}>
+              <div key={s.label} className={`p-3 sm:p-4 rounded-2xl border text-xs space-y-1.5 sm:space-y-2 ${isGain ? 'bg-emerald-500/5 border-emerald-500/30' : 'bg-rose-500/5 border-rose-500/30'}`}>
                 <p className="text-base">{s.icon}</p>
-                <p className="font-bold text-neutral-900 dark:text-white">{s.label}</p>
-                <p className={`text-2xl font-black ${isGain ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`}>
+                <p className="font-bold text-neutral-900 dark:text-white leading-tight line-clamp-2">{s.label}</p>
+                <p className={`text-lg sm:text-2xl font-black ${isGain ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`}>
                   {isGain ? '+' : ''}₹{Math.abs(impact).toFixed(0)}L
                 </p>
-                <p className="text-neutral-500">New value: <strong className="text-neutral-900 dark:text-white">₹{newVal.toFixed(0)}L</strong></p>
+                <p className="text-[11px] text-neutral-500">New val: <strong className="text-neutral-900 dark:text-white">₹{newVal.toFixed(0)}L</strong></p>
               </div>
             );
           })}
@@ -637,14 +637,14 @@ const DrawdownStress: React.FC<{ enriched: ReturnType<typeof useLiveEnrichedHold
       </div>
 
       {/* Bar chart - max drawdown per fund */}
-      <div className="p-6 rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-md">
+      <div className="p-4 sm:p-6 rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-md">
         <h3 className="font-bold text-sm text-neutral-900 dark:text-white mb-4">Worst 15 Funds by Max Historical Drawdown</h3>
         <div className="h-72">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={chartData} layout="vertical" margin={{ top: 0, right: 40, left: 0, bottom: 0 }}>
+            <BarChart data={chartData} layout="vertical" margin={{ top: 0, right: 20, left: -5, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" stroke={ct.grid} horizontal={false} />
               <XAxis type="number" stroke={ct.axis} fontSize={11} tickFormatter={v => `${v}%`} />
-              <YAxis type="category" dataKey="name" stroke={ct.axis} tick={{ fontSize: 9, fill: ct.tickFill }} width={110} />
+              <YAxis type="category" dataKey="name" stroke={ct.axis} tick={{ fontSize: 9, fill: ct.tickFill }} width={95} />
               <Tooltip contentStyle={{ backgroundColor: ct.tooltipBg, borderColor: ct.tooltipBorder, borderRadius: '12px', color: ct.tooltipText, fontSize: '12px' }}
                 formatter={(v: any) => [`${v}%`, 'Max Drawdown']} />
               <Bar dataKey="dd" name="Max Drawdown" radius={[0, 4, 4, 0]}>
@@ -660,8 +660,8 @@ const DrawdownStress: React.FC<{ enriched: ReturnType<typeof useLiveEnrichedHold
         <div className="p-3 bg-neutral-50 dark:bg-neutral-950 border-b border-neutral-200 dark:border-neutral-800 text-xs font-bold text-neutral-900 dark:text-white">
           All {withDD.length} Holdings with Drawdown Data — Sorted Worst First
         </div>
-        <div className="overflow-x-auto max-h-72">
-          <table className="mono-table">
+        <div className="table-scroll-container max-h-72">
+          <table className="mono-table min-w-[550px]">
             <thead><tr className="sticky top-0 z-10">
               <th>Fund</th><th className="text-center">Category</th><th className="text-right">Max Drawdown</th>
               <th className="text-right">Sharpe</th><th className="text-right">3Y CAGR</th><th className="text-right">Capital</th>
@@ -701,24 +701,24 @@ export const AnalyticsContainer: React.FC<AnalyticsContainerProps> = ({ onSelect
   return (
     <div className="space-y-4 animate-fadeIn">
       {/* Header */}
-      <div className="p-5 rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <div className="flex items-center gap-2 text-xs text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-wider mb-1">
             <TrendingUp className="w-4 h-4" />
             <span>Fund Analytics Terminal</span>
           </div>
-          <h2 className="text-xl font-black text-neutral-900 dark:text-white">Portfolio Deep-Dive Analytics</h2>
-          <p className="text-xs text-neutral-500 mt-0.5">91 holdings · ₹7.93 Crore · Live Tickertape data</p>
+          <h2 className="text-lg sm:text-xl font-black text-neutral-900 dark:text-white">Portfolio Deep-Dive Analytics</h2>
+          <p className="text-xs text-neutral-500 mt-0.5">{PORTFOLIO_HOLDINGS.length} holdings · ₹{(TOTAL_PORTFOLIO_VALUE_LAKHS / 100).toFixed(2)} Crore · Live Tickertape data</p>
         </div>
         {liveFunds.length > 0 && (
-          <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 font-bold text-xs">
+          <span className="self-start sm:self-auto flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 font-bold text-xs">
             <Zap className="w-3.5 h-3.5" /> {liveFunds.length} Tickertape Schemes Loaded
           </span>
         )}
       </div>
 
       {/* Tab Bar */}
-      <div className="p-2 rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-sm flex overflow-x-auto gap-1 scrollbar-none">
+      <div className="p-1.5 sm:p-2 rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-sm flex overflow-x-auto gap-1 scrollbar-none touch-pan-x">
         {tabs.map(t => {
           const Icon = t.icon;
           const isActive = tab === t.id;
@@ -726,14 +726,14 @@ export const AnalyticsContainer: React.FC<AnalyticsContainerProps> = ({ onSelect
             <button
               key={t.id}
               onClick={() => setTab(t.id as any)}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex-shrink-0 ${
+              className={`flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex-shrink-0 ${
                 isActive ? 'bg-black dark:bg-white text-white dark:text-black shadow-sm' : 'text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-900'
               }`}
             >
-              <Icon className="w-4 h-4" />
+              <Icon className="w-4 h-4 flex-shrink-0" />
               <div className="text-left">
                 <div>{t.label}</div>
-                {!isActive && <div className="text-[10px] opacity-60 font-normal">{t.desc}</div>}
+                {!isActive && <div className="text-[10px] opacity-60 font-normal hidden sm:block">{t.desc}</div>}
               </div>
             </button>
           );

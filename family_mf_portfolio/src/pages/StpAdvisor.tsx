@@ -125,13 +125,13 @@ export const StpAdvisor: React.FC = () => {
   return (
     <div className="space-y-6 pb-12 animate-fadeIn">
       {/* Header */}
-      <div className="p-6 rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-md flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="p-4 sm:p-6 rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-md flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center space-x-2 text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider mb-1">
             <ArrowRightLeft className="w-4 h-4" />
             <span>Dynamic STP & Tax Rebalancing Terminal</span>
           </div>
-          <h2 className="text-xl sm:text-2xl font-extrabold text-neutral-900 dark:text-white">Systemic Transfer Plan & Budget 2024 Tax Optimizer</h2>
+          <h2 className="text-lg sm:text-2xl font-extrabold text-neutral-900 dark:text-white">Systemic Transfer Plan & Budget 2024 Tax Optimizer</h2>
           <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1 max-w-3xl">
             Systematically transfer capital out of underperforming schemes into your choice of top compounding equity leaders or custom target funds under Budget 2024 Tax Harvesting rules (LTCG 12.5% vs STCG 20%).
           </p>
@@ -139,7 +139,7 @@ export const StpAdvisor: React.FC = () => {
 
         <button
           onClick={() => window.print()}
-          className="px-4 py-2 rounded-xl text-xs font-bold bg-black dark:bg-white text-white dark:text-black hover:bg-neutral-800 dark:hover:bg-neutral-200 transition shadow-sm flex items-center space-x-1.5 flex-shrink-0"
+          className="self-start md:self-auto px-4 py-2 rounded-xl text-xs font-bold bg-black dark:bg-white text-white dark:text-black hover:bg-neutral-800 dark:hover:bg-neutral-200 transition shadow-sm flex items-center space-x-1.5 flex-shrink-0"
         >
           <Printer className="w-4 h-4" />
           <span>Print STP Order Sheet</span>
@@ -147,29 +147,29 @@ export const StpAdvisor: React.FC = () => {
       </div>
 
       {/* Quick Stat KPI Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-        <div className="p-4 rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-md">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3 text-xs">
+        <div className="p-3 sm:p-4 rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-md">
           <p className="text-[10px] text-neutral-500 font-medium">Rebalance Redemption Capital</p>
-          <p className="text-lg font-black text-neutral-900 dark:text-white mt-1">₹{totalCapitalSelected.toFixed(2)}L</p>
+          <p className="text-base sm:text-lg font-black text-neutral-900 dark:text-white mt-1">₹{totalCapitalSelected.toFixed(2)}L</p>
           <p className="text-[10px] text-neutral-400">{selectedFundsList.length} Laggard Schemes</p>
         </div>
 
-        <div className="p-4 rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-md">
+        <div className="p-3 sm:p-4 rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-md">
           <p className="text-[10px] text-neutral-500 font-medium">Net Capital Gains Tax Payable</p>
-          <p className="text-lg font-black text-rose-600 dark:text-rose-400 mt-1">₹{totalTaxPayable.toFixed(2)}L</p>
-          <p className="text-[10px] text-neutral-400">{isLtcg ? 'LTCG @ 12.5% (₹1.25L Exempt)' : 'STCG @ 20.0%'}</p>
+          <p className="text-base sm:text-lg font-black text-rose-600 dark:text-rose-400 mt-1">₹{totalTaxPayable.toFixed(2)}L</p>
+          <p className="text-[10px] text-neutral-400 truncate">{isLtcg ? 'LTCG @ 12.5% (₹1.25L Ex.)' : 'STCG @ 20.0%'}</p>
         </div>
 
-        <div className="p-4 rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-md">
+        <div className="p-3 sm:p-4 rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-md">
           <p className="text-[10px] text-neutral-500 font-medium">Monthly STP Tranche ({stpMonths}m)</p>
-          <p className="text-lg font-black text-neutral-900 dark:text-white mt-1">₹{monthlyTranche.toFixed(2)}L/mo</p>
+          <p className="text-base sm:text-lg font-black text-neutral-900 dark:text-white mt-1">₹{monthlyTranche.toFixed(2)}L/mo</p>
           <p className="text-[10px] text-neutral-400">Net Retained: ₹{netCapitalRetained.toFixed(2)}L</p>
         </div>
 
-        <div className="p-4 rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-md">
+        <div className="p-3 sm:p-4 rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-md">
           <p className="text-[10px] text-neutral-500 font-medium">Est. Annual Return Boost</p>
-          <p className="text-lg font-black text-emerald-600 dark:text-emerald-400 mt-1">+₹{annualReturnBumpLakhs.toFixed(2)}L/yr</p>
-          <p className="text-[10px] text-neutral-400">Target CAGR: {effectiveTargetCagr.toFixed(1)}%</p>
+          <p className="text-base sm:text-lg font-black text-emerald-600 dark:text-emerald-400 mt-1">+₹{annualReturnBumpLakhs.toFixed(2)}L/yr</p>
+          <p className="text-[10px] text-neutral-400">Target: {effectiveTargetCagr.toFixed(1)}%</p>
         </div>
       </div>
 
@@ -177,7 +177,7 @@ export const StpAdvisor: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left Column: Select Laggard Source Funds */}
         <div className="lg:col-span-5 space-y-4">
-          <div className="p-5 rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-md space-y-3">
+          <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-md space-y-3">
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="font-bold text-sm text-neutral-900 dark:text-white">Source Funds ({selectedHoldings.length}/{stpCandidates.length} Selected)</h3>
@@ -192,9 +192,9 @@ export const StpAdvisor: React.FC = () => {
             </div>
 
             {/* Holding Period Switcher */}
-            <div className="p-3 rounded-xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 flex items-center justify-between text-xs">
+            <div className="p-3 rounded-xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
               <span className="font-bold text-neutral-700 dark:text-neutral-300">Holding Period:</span>
-              <div className="flex space-x-1">
+              <div className="flex flex-wrap gap-1">
                 <button
                   onClick={() => setIsLtcg(true)}
                   className={`px-2.5 py-1 rounded-lg font-bold text-[11px] transition ${
@@ -252,15 +252,15 @@ export const StpAdvisor: React.FC = () => {
 
         {/* Right Column: Dynamic Destination Rebalance Target */}
         <div className="lg:col-span-7 space-y-4">
-          <div className="p-5 rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-md space-y-4">
-            <div className="flex items-center justify-between border-b border-neutral-200 dark:border-neutral-800 pb-3">
+          <div className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-md space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 border-b border-neutral-200 dark:border-neutral-800 pb-3">
               <div>
                 <h3 className="font-extrabold text-base text-neutral-900 dark:text-white">Dynamic Destination Rebalance Target</h3>
                 <p className="text-xs text-neutral-500">Choose a high-compounding strategy or search any target fund from 866 schemes</p>
               </div>
 
               {/* Mode Switcher Buttons */}
-              <div className="flex space-x-1 text-xs">
+              <div className="flex space-x-1 text-xs flex-shrink-0">
                 <button
                   onClick={() => setDestinationMode('STRATEGY')}
                   className={`px-3 py-1.5 rounded-xl font-bold transition ${
@@ -392,13 +392,13 @@ export const StpAdvisor: React.FC = () => {
 
       {/* Per-Fund Transfer & Tax Breakdown Table */}
       <div className="rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-md overflow-hidden">
-        <div className="p-4 bg-neutral-50 dark:bg-neutral-950 border-b border-neutral-200 dark:border-neutral-800 flex items-center justify-between text-xs">
+        <div className="p-4 bg-neutral-50 dark:bg-neutral-950 border-b border-neutral-200 dark:border-neutral-800 flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-xs">
           <h4 className="font-bold text-neutral-900 dark:text-white">Per-Fund Redemption & Tax Rebalance Transfer Breakdown ({selectedFundsList.length} Funds)</h4>
-          <span className="text-neutral-500 font-semibold">Destination Target: {effectiveDestinationName}</span>
+          <span className="text-neutral-500 font-semibold truncate">Destination Target: {effectiveDestinationName}</span>
         </div>
 
-        <div className="overflow-x-auto max-h-[500px]">
-          <table className="mono-table">
+        <div className="table-scroll-container max-h-[500px]">
+          <table className="mono-table min-w-[700px]">
             <thead>
               <tr className="sticky top-0 z-10">
                 <th>Source Scheme Name</th>

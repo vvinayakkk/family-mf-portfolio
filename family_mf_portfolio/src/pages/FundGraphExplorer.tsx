@@ -152,7 +152,7 @@ export const FundGraphExplorer: React.FC = () => {
     { id: 'LARGE_MID', label: 'Large & Large/Mid Cap' },
     { id: 'VALUE_CONTRA', label: 'Value / Contra' },
     { id: 'HYBRID', label: 'Hybrid & Multi Asset' },
-    { id: 'MY_HOLDINGS', label: '🏦 My 91 Holdings' },
+    { id: 'MY_HOLDINGS', label: `🏦 My Portfolio (${PORTFOLIO_HOLDINGS.length})` },
   ];
 
   const filteredSchemesList = useMemo(() => {

@@ -489,7 +489,7 @@ export const CategoryRankings: React.FC = () => {
             </div>
 
             {/* Presets Row: Default Presets + Custom Presets + Add Preset Button */}
-            <div className="flex items-center space-x-2 overflow-x-auto pb-1 scrollbar-none pt-1">
+            <div className="flex items-center space-x-2 overflow-x-auto pb-1.5 scrollbar-none pt-1 touch-pan-x">
               <span className="text-neutral-500 font-bold flex-shrink-0 flex items-center gap-1">
                 <Layers className="w-3.5 h-3.5" /> Presets:
               </span>
@@ -502,7 +502,7 @@ export const CategoryRankings: React.FC = () => {
                       setSelectedPreset(grp.id);
                       setSelectedSpecificCategory('ALL');
                     }}
-                    className={`px-3 py-1.5 rounded-xl font-bold whitespace-nowrap transition ${
+                    className={`px-3 py-1.5 rounded-xl font-bold whitespace-nowrap transition flex-shrink-0 ${
                       isActive
                         ? 'bg-black dark:bg-white text-white dark:text-black shadow-sm'
                         : 'bg-neutral-50 dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white border border-neutral-200 dark:border-neutral-800'
@@ -1004,7 +1004,7 @@ export const CategoryRankings: React.FC = () => {
           </div>
         )}
 
-        <div className="overflow-x-auto max-h-[650px]">
+        <div className="overflow-x-auto max-h-[650px] table-scroll-container">
           <table className="mono-table">
             <thead>
               <tr className="sticky top-0 z-10">

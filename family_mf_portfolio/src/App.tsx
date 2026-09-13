@@ -8,7 +8,7 @@ import { FundGraphExplorer } from './pages/FundGraphExplorer';
 import { MFScreener } from './pages/MFScreener';
 import { GoldSilverEtfExplorer } from './pages/GoldSilverEtfExplorer';
 import { FundModal } from './components/FundModal';
-import type { MutualFundHolding } from './data/portfolioData';
+import { TOTAL_PORTFOLIO_VALUE_LAKHS, PORTFOLIO_HOLDINGS, type MutualFundHolding } from './data/portfolioData';
 import { Minimize2 } from 'lucide-react';
 
 export function App() {
@@ -63,7 +63,7 @@ export function App() {
       )}
 
       {/* Main Content */}
-      <main className={`flex-1 w-full mx-auto transition-all ${isFullScreen ? 'p-4 max-w-full' : 'max-w-screen-2xl px-4 sm:px-6 lg:px-8 pt-6 pb-12'}`}>
+      <main className={`flex-1 w-full mx-auto transition-all ${isFullScreen ? 'p-2 sm:p-4 max-w-full' : 'max-w-screen-2xl px-2.5 sm:px-6 lg:px-8 pt-3 sm:pt-6 pb-8 sm:pb-12'}`}>
         {activeTab === 'screener' && <MFScreener />}
 
         {activeTab === 'etf-hub' && <GoldSilverEtfExplorer />}
@@ -100,7 +100,7 @@ export function App() {
           style={{ borderTop: '1px solid var(--border-color)', background: 'var(--card-bg)', color: 'var(--text-muted)' }}
         >
           <div className="max-w-screen-2xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-            <p>Family Mutual Fund Suite · 91 Holdings · 1,500 Master DB · ₹7.93 Cr</p>
+            <p>Family Mutual Fund Suite · {PORTFOLIO_HOLDINGS.length} Holdings · 1,500 Master DB · ₹{(TOTAL_PORTFOLIO_VALUE_LAKHS / 100).toFixed(2)} Cr</p>
             <p style={{ color: 'var(--accent)', fontWeight: 700 }}>Live Tickertape Sync Enabled</p>
           </div>
         </footer>

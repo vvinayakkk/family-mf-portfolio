@@ -293,6 +293,7 @@ export const MFScreener: React.FC = () => {
   const [addedFilters, setAddedFilters] = useState<string[]>([]);
   const [showAddFilter, setShowAddFilter] = useState(false);
   const [selectedRows, setSelectedRows] = useState<Set<string>>(new Set());
+  const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
 
   const PAGE_SIZE = 20;
 
@@ -475,11 +476,200 @@ export const MFScreener: React.FC = () => {
     + (filters.minAlpha > -20 ? 1 : 0)
     + addedFilters.length;
 
+  const renderFilterContent = () => (
+    <>
+      {/* Filter Header */}
+      <div className="p-3 flex items-center justify-between border-b" style={{ borderColor: 'var(--border-color)' }}>
+        <span className="flex items-center gap-2 text-xs font-semibold" style={{ color: 'var(--text-main)' }}>
+          <SlidersHorizontal className="w-3.5 h-3.5" />
+          Filters
+          {activeFilterCount > 0 && (
+            <span className="chip-accent text-[10px] px-1.5">{activeFilterCount} applied</span>
+          )}
+        </span>
+        {activeFilterCount > 0 && (
+          <button onClick={resetAll} className="text-[11px] font-semibold" style={{ color: '#00B386' }}>
+            Reset all
+          </button>
+        )}
+      </div>
+
+      {/* Universe Toggle */}
+      <FilterSection label="MF Universe" defaultOpen>
+        <div className="flex flex-col gap-1.5">
+          {[{ v: 'all', l: `All Funds (${allFunds.length.toLocaleString()})` }, { v: 'holdings', l: `My Portfolio (${PORTFOLIO_HOLDINGS.length})` }].map(opt => (
+            <label key={opt.v} className="flex items-center gap-2 cursor-pointer text-xs" style={{ color: 'var(--text-main)' }}>
+              <input type="radio" name="universe" value={opt.v}
+                checked={filters.universe === opt.v}
+                onChange={() => updateFilter('universe', opt.v as any)}
+                className="accent-emerald-500"
+              />
+              {opt.l}
+            </label>
+          ))}
+        </div>
+      </FilterSection>
+
+      {/* Category */}
+      <FilterSection label="Category" defaultOpen badge={filters.categories.length || undefined}>
+        <div className="mb-2">
+          <input
+            type="text"
+            placeholder="Search by category name"
+            className="tt-input text-xs py-1"
+          />
+        </div>
+        {Object.entries(CATEGORY_GROUPS).map(([group, cats]) => (
+          <div key={group} className="mb-1">
+            <button
+              onClick={() => setExpandedCatGroups(s => ({ ...s, [group]: !s[group] }))}
+              className="flex items-center justify-between w-full text-xs py-1 font-semibold"
+              style={{ color: 'var(--text-muted)' }}
+            >
+              <span className="flex items-center gap-1">
+                <input
+                  type="checkbox"
+                  checked={cats.every(c => filters.categories.includes(c))}
+                  onChange={e => {
+                    if (e.target.checked) {
+                      setFilters(f => ({ ...f, categories: [...new Set([...f.categories, ...cats])] }));
+                    } else {
+                      setFilters(f => ({ ...f, categories: f.categories.filter(c => !cats.includes(c)) }));
+                    }
+                  }}
+                  onClick={e => e.stopPropagation()}
+                />
+                {group} ({cats.length})
+              </span>
+              {expandedCatGroups[group] ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+            </button>
+            {expandedCatGroups[group] && (
+              <div className="ml-4 space-y-1 mt-1">
+                {cats.map(cat => (
+                  <label key={cat} className="flex items-center gap-2 cursor-pointer text-xs" style={{ color: 'var(--text-main)' }}>
+                    <input type="checkbox"
+                      checked={filters.categories.includes(cat)}
+                      onChange={() => toggleCategory(cat)}
+                    />
+                    {cat}
+                  </label>
+                ))}
+              </div>
+            )}
+          </div>
+        ))}
+      </FilterSection>
+
+      {/* AUM */}
+      <FilterSection label="AUM (Cr)">
+        <RangeFilter label="Min AUM" min={0} max={200000} step={1000} value={filters.minAum}
+          onChange={v => updateFilter('minAum', v)} unit=" Cr" />
+        <RangeFilter label="Max AUM" min={0} max={200000} step={1000} value={filters.maxAum}
+          onChange={v => updateFilter('maxAum', v)} unit=" Cr" side="max" />
+      </FilterSection>
+
+      {/* Returns */}
+      <FilterSection label="Returns">
+        <RangeFilter label="Min 1Y CAGR" min={-50} max={100} value={filters.minCagr1y}
+          onChange={v => updateFilter('minCagr1y', v)} unit="%" />
+        <RangeFilter label="Min 3Y CAGR" min={0} max={60} value={filters.minCagr3y}
+          onChange={v => updateFilter('minCagr3y', v)} unit="%" />
+        <RangeFilter label="Min 5Y CAGR" min={0} max={50} value={filters.minCagr5y}
+          onChange={v => updateFilter('minCagr5y', v)} unit="%" />
+        <RangeFilter label="Min 10Y CAGR" min={0} max={40} value={filters.minCagr10y}
+          onChange={v => updateFilter('minCagr10y', v)} unit="%" />
+      </FilterSection>
+
+      {/* Expense Ratio */}
+      <FilterSection label="Expense Ratio (%)">
+        <RangeFilter label="Max Expense Ratio" min={0} max={2.5} step={0.05} value={filters.maxExpense}
+          onChange={v => updateFilter('maxExpense', v)} unit="%" side="max" />
+      </FilterSection>
+
+      {/* Risk Metrics */}
+      <FilterSection label="Risk Metrics">
+        <RangeFilter label="Min Sharpe Ratio (3Y)" min={0} max={4} step={0.1} value={filters.minSharpe}
+          onChange={v => updateFilter('minSharpe', v)} />
+        <RangeFilter label="Min Sortino Ratio (3Y)" min={0} max={5} step={0.1} value={filters.minSortino}
+          onChange={v => updateFilter('minSortino', v)} />
+        <RangeFilter label="Min Alpha (%)" min={-20} max={30} value={filters.minAlpha}
+          onChange={v => updateFilter('minAlpha', v)} unit="%" />
+      </FilterSection>
+
+      {/* Rolling Returns */}
+      <FilterSection label="3Y Rolling Returns">
+        <RangeFilter label="Min 3Y Rolling Floor" min={-30} max={50} value={filters.minR3min}
+          onChange={v => updateFilter('minR3min', v)} unit="%" />
+        <RangeFilter label="Min 3Y Rolling Median" min={-30} max={50} value={filters.minR3med}
+          onChange={v => updateFilter('minR3med', v)} unit="%" />
+        <RangeFilter label="Max Rolling Spread" min={0} max={80} value={filters.maxRollSpread}
+          onChange={v => updateFilter('maxRollSpread', v)} unit="pp" side="max" />
+      </FilterSection>
+
+      {/* Extra added filters */}
+      {addedFilters.includes('vol') && (
+        <FilterSection label="Volatility (Std Dev)">
+          <RangeFilter label="Max Volatility" min={0} max={35} value={filters.maxVol}
+            onChange={v => updateFilter('maxVol', v)} unit="%" side="max" />
+        </FilterSection>
+      )}
+      {addedFilters.includes('maxdd') && (
+        <FilterSection label="Max Drawdown (%)">
+          <RangeFilter label="Max Drawdown Floor" min={-80} max={0} value={filters.maxDrawdown}
+            onChange={v => updateFilter('maxDrawdown', v)} unit="%" />
+        </FilterSection>
+      )}
+      {addedFilters.includes('percLarge') && (
+        <FilterSection label="% Large Cap">
+          <RangeFilter label="Min Large Cap Allocation" min={0} max={100} value={filters.minPercLarge}
+            onChange={v => updateFilter('minPercLarge', v)} unit="%" />
+        </FilterSection>
+      )}
+      {addedFilters.includes('percEquity') && (
+        <FilterSection label="% Equity">
+          <RangeFilter label="Min Equity Allocation" min={0} max={100} value={filters.minPercEquity}
+            onChange={v => updateFilter('minPercEquity', v)} unit="%" />
+        </FilterSection>
+      )}
+      {addedFilters.includes('retvscat') && (
+        <FilterSection label="Return vs Category 3Y">
+          <RangeFilter label="Min Outperformance" min={-20} max={30} value={filters.minRetVsCat3y}
+            onChange={v => updateFilter('minRetVsCat3y', v)} unit="%" />
+        </FilterSection>
+      )}
+
+      {/* + Add Filter */}
+      <div className="p-3">
+        <button
+          onClick={() => setShowAddFilter(s => !s)}
+          className="flex items-center gap-2 w-full text-xs font-semibold py-2 px-3 rounded-lg transition"
+          style={{ border: '1.5px dashed var(--border-color)', color: 'var(--accent)', background: 'var(--accent-light)' }}
+        >
+          <Plus className="w-3.5 h-3.5" /> Add Filter
+        </button>
+        {showAddFilter && (
+          <div className="mt-2 space-y-1">
+            {optionalFilters.filter(f => !addedFilters.includes(f.key)).map(f => (
+              <button
+                key={f.key}
+                onClick={() => { setAddedFilters(s => [...s, f.key]); setShowAddFilter(false); }}
+                className="flex items-center gap-1.5 w-full text-xs px-2 py-1.5 rounded-lg text-left transition"
+                style={{ color: 'var(--text-main)', background: 'var(--hover-bg)' }}
+              >
+                <Plus className="w-3 h-3" /> {f.label}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+    </>
+  );
+
   return (
     <div className="flex flex-col animate-fadeIn" style={{ minHeight: 'calc(100vh - 120px)' }}>
       {/* ── Header ──────────────────────────────────────────────────── */}
-      <div className="p-4 sm:p-6 pb-0">
-        <div className="flex items-center justify-between mb-4">
+      <div className="p-3 sm:p-6 pb-0">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
           <div>
             <h1 className="text-xl font-bold" style={{ color: 'var(--text-main)' }}>
               Mutual Funds Screener
@@ -488,23 +678,42 @@ export const MFScreener: React.FC = () => {
               Screen from {allFunds.length.toLocaleString()} funds using 30+ institutional filters
             </p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
+            {/* Mobile Filter Toggle */}
+            {viewMode === 'screener' && (
+              <button
+                onClick={() => setMobileFilterOpen(true)}
+                className="lg:hidden flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition"
+                style={{
+                  background: activeFilterCount > 0 ? 'var(--accent-light)' : 'transparent',
+                  border: `1px solid ${activeFilterCount > 0 ? 'var(--accent)' : 'var(--border-color)'}`,
+                  color: activeFilterCount > 0 ? 'var(--accent)' : 'var(--text-main)',
+                }}
+              >
+                <SlidersHorizontal className="w-3.5 h-3.5" />
+                <span>Filters</span>
+                {activeFilterCount > 0 && (
+                  <span className="chip-accent text-[10px] px-1.5 py-0">{activeFilterCount}</span>
+                )}
+              </button>
+            )}
+
             {/* View Mode Toggle: Tickertape Screener vs Evaluated Matrix */}
             <div className="flex items-center p-0.5 rounded-lg border" style={{ borderColor: 'var(--border-color)', background: 'transparent' }}>
               <button
                 onClick={() => setViewMode('screener')}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold transition"
+                className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-md text-xs font-semibold transition"
                 style={{
                   background: viewMode === 'screener' ? 'var(--accent)' : 'transparent',
                   color: viewMode === 'screener' ? '#fff' : 'var(--text-muted)',
                 }}
               >
                 <Table className="w-3.5 h-3.5" />
-                <span>Screener View</span>
+                <span>Screener</span>
               </button>
               <button
                 onClick={() => setViewMode('matrix')}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold transition"
+                className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-md text-xs font-semibold transition"
                 style={{
                   background: viewMode === 'matrix' ? 'var(--accent)' : 'transparent',
                   color: viewMode === 'matrix' ? '#fff' : 'var(--text-muted)',
@@ -518,7 +727,7 @@ export const MFScreener: React.FC = () => {
             {viewMode === 'screener' && (
               <button
                 onClick={() => setShowScreens(s => !s)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition"
+                className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold transition"
                 style={{
                   background: 'transparent',
                   border: '1px solid var(--border-color)',
@@ -526,7 +735,8 @@ export const MFScreener: React.FC = () => {
                 }}
               >
                 <BarChart2 className="w-3.5 h-3.5" />
-                {showScreens ? 'Hide Presets' : 'Preset Screens'}
+                <span className="hidden sm:inline">{showScreens ? 'Hide Presets' : 'Preset Screens'}</span>
+                <span className="sm:hidden">Presets</span>
               </button>
             )}
 
@@ -558,17 +768,11 @@ export const MFScreener: React.FC = () => {
                   <button
                     key={screen.id}
                     onClick={() => applyScreen(screen)}
-                    className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition cursor-pointer"
+                    className="flex items-center gap-2 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-medium transition cursor-pointer"
                     style={{
                       background: 'transparent',
                       border: `1px solid ${isSelected ? 'var(--accent)' : 'var(--border-color)'}`,
                       color: isSelected ? 'var(--accent)' : 'var(--text-main)',
-                    }}
-                    onMouseEnter={(e) => {
-                      if (!isSelected) e.currentTarget.style.borderColor = 'var(--accent)';
-                    }}
-                    onMouseLeave={(e) => {
-                      if (!isSelected) e.currentTarget.style.borderColor = 'var(--border-color)';
                     }}
                   >
                     <Icon className="w-3.5 h-3.5 text-neutral-500" />
@@ -582,202 +786,68 @@ export const MFScreener: React.FC = () => {
         )}
       </div>
 
+      {/* ── Mobile Filter Drawer ────────────────────────────────────────── */}
+      {mobileFilterOpen && (
+        <div 
+          className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm lg:hidden flex justify-end animate-fadeIn"
+          onClick={() => setMobileFilterOpen(false)}
+        >
+          <div 
+            className="w-[85vw] max-w-sm h-full flex flex-col shadow-2xl animate-slideInRight"
+            style={{ background: 'var(--card-bg)', borderLeft: '1px solid var(--border-color)' }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-3.5 flex items-center justify-between border-b" style={{ borderColor: 'var(--border-color)' }}>
+              <span className="flex items-center gap-2 text-xs font-bold" style={{ color: 'var(--text-main)' }}>
+                <SlidersHorizontal className="w-4 h-4 text-emerald-500" />
+                Filter Schemes ({activeFilterCount} applied)
+              </span>
+              <button 
+                onClick={() => setMobileFilterOpen(false)}
+                className="p-1 rounded-lg transition"
+                style={{ color: 'var(--text-muted)' }}
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto">
+              {renderFilterContent()}
+            </div>
+
+            <div className="p-3 border-t flex items-center gap-2" style={{ borderColor: 'var(--border-color)', background: 'var(--bg-sub)' }}>
+              <button
+                onClick={resetAll}
+                className="flex-1 py-2 px-3 text-xs font-bold rounded-lg transition"
+                style={{ border: '1px solid var(--border-color)', color: 'var(--text-main)', background: 'transparent' }}
+              >
+                Reset All
+              </button>
+              <button
+                onClick={() => setMobileFilterOpen(false)}
+                className="flex-1 py-2 px-3 text-xs font-bold rounded-lg transition"
+                style={{ background: 'var(--accent)', color: '#fff' }}
+              >
+                View {sorted.length} Funds
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* ── Main Layout: Sidebar + Results ───────────────────────────────────── */}
       {viewMode === 'screener' && (
-        <div className="flex flex-1 overflow-hidden px-4 sm:px-6 pb-6 gap-4 animate-fadeIn">
-        {/* ── Left Sidebar ────────────────────────────────────────────────── */}
-        <div className="w-64 flex-shrink-0 tt-sidebar rounded-xl overflow-y-auto" style={{ maxHeight: 'calc(100vh - 200px)' }}>
-          {/* Filter Header */}
-          <div className="p-3 flex items-center justify-between border-b" style={{ borderColor: 'var(--border-color)' }}>
-            <span className="flex items-center gap-2 text-xs font-semibold" style={{ color: 'var(--text-main)' }}>
-              <SlidersHorizontal className="w-3.5 h-3.5" />
-              Filters
-              {activeFilterCount > 0 && (
-                <span className="chip-accent text-[10px] px-1.5">{activeFilterCount} applied</span>
-              )}
-            </span>
-            {activeFilterCount > 0 && (
-              <button onClick={resetAll} className="text-[11px] font-semibold" style={{ color: '#00B386' }}>
-                Reset all
-              </button>
-            )}
-          </div>
-
-          {/* Universe Toggle */}
-          <FilterSection label="MF Universe" defaultOpen>
-            <div className="flex flex-col gap-1.5">
-              {[{ v: 'all', l: `All Funds (${allFunds.length.toLocaleString()})` }, { v: 'holdings', l: 'My 91 Holdings' }].map(opt => (
-                <label key={opt.v} className="flex items-center gap-2 cursor-pointer text-xs" style={{ color: 'var(--text-main)' }}>
-                  <input type="radio" name="universe" value={opt.v}
-                    checked={filters.universe === opt.v}
-                    onChange={() => updateFilter('universe', opt.v as any)}
-                    className="accent-emerald-500"
-                  />
-                  {opt.l}
-                </label>
-              ))}
-            </div>
-          </FilterSection>
-
-          {/* Category */}
-          <FilterSection label="Category" defaultOpen badge={filters.categories.length || undefined}>
-            <div className="mb-2">
-              <input
-                type="text"
-                placeholder="Search by category name"
-                className="tt-input text-xs py-1"
-              />
-            </div>
-            {Object.entries(CATEGORY_GROUPS).map(([group, cats]) => (
-              <div key={group} className="mb-1">
-                <button
-                  onClick={() => setExpandedCatGroups(s => ({ ...s, [group]: !s[group] }))}
-                  className="flex items-center justify-between w-full text-xs py-1 font-semibold"
-                  style={{ color: 'var(--text-muted)' }}
-                >
-                  <span className="flex items-center gap-1">
-                    <input
-                      type="checkbox"
-                      checked={cats.every(c => filters.categories.includes(c))}
-                      onChange={e => {
-                        if (e.target.checked) {
-                          setFilters(f => ({ ...f, categories: [...new Set([...f.categories, ...cats])] }));
-                        } else {
-                          setFilters(f => ({ ...f, categories: f.categories.filter(c => !cats.includes(c)) }));
-                        }
-                      }}
-                      onClick={e => e.stopPropagation()}
-                    />
-                    {group} ({cats.length})
-                  </span>
-                  {expandedCatGroups[group] ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
-                </button>
-                {expandedCatGroups[group] && (
-                  <div className="ml-4 space-y-1 mt-1">
-                    {cats.map(cat => (
-                      <label key={cat} className="flex items-center gap-2 cursor-pointer text-xs" style={{ color: 'var(--text-main)' }}>
-                        <input type="checkbox"
-                          checked={filters.categories.includes(cat)}
-                          onChange={() => toggleCategory(cat)}
-                        />
-                        {cat}
-                      </label>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
-          </FilterSection>
-
-          {/* AUM */}
-          <FilterSection label="AUM (Cr)">
-            <RangeFilter label="Min AUM" min={0} max={200000} step={1000} value={filters.minAum}
-              onChange={v => updateFilter('minAum', v)} unit=" Cr" />
-            <RangeFilter label="Max AUM" min={0} max={200000} step={1000} value={filters.maxAum}
-              onChange={v => updateFilter('maxAum', v)} unit=" Cr" side="max" />
-          </FilterSection>
-
-          {/* Returns */}
-          <FilterSection label="Returns">
-            <RangeFilter label="Min 1Y CAGR" min={-50} max={100} value={filters.minCagr1y}
-              onChange={v => updateFilter('minCagr1y', v)} unit="%" />
-            <RangeFilter label="Min 3Y CAGR" min={0} max={60} value={filters.minCagr3y}
-              onChange={v => updateFilter('minCagr3y', v)} unit="%" />
-            <RangeFilter label="Min 5Y CAGR" min={0} max={50} value={filters.minCagr5y}
-              onChange={v => updateFilter('minCagr5y', v)} unit="%" />
-            <RangeFilter label="Min 10Y CAGR" min={0} max={40} value={filters.minCagr10y}
-              onChange={v => updateFilter('minCagr10y', v)} unit="%" />
-          </FilterSection>
-
-          {/* Expense Ratio */}
-          <FilterSection label="Expense Ratio (%)">
-            <RangeFilter label="Max Expense Ratio" min={0} max={2.5} step={0.05} value={filters.maxExpense}
-              onChange={v => updateFilter('maxExpense', v)} unit="%" side="max" />
-          </FilterSection>
-
-          {/* Risk Metrics */}
-          <FilterSection label="Risk Metrics">
-            <RangeFilter label="Min Sharpe Ratio (3Y)" min={0} max={4} step={0.1} value={filters.minSharpe}
-              onChange={v => updateFilter('minSharpe', v)} />
-            <RangeFilter label="Min Sortino Ratio (3Y)" min={0} max={5} step={0.1} value={filters.minSortino}
-              onChange={v => updateFilter('minSortino', v)} />
-            <RangeFilter label="Min Alpha (%)" min={-20} max={30} value={filters.minAlpha}
-              onChange={v => updateFilter('minAlpha', v)} unit="%" />
-          </FilterSection>
-
-          {/* Rolling Returns */}
-          <FilterSection label="3Y Rolling Returns">
-            <RangeFilter label="Min 3Y Rolling Floor" min={-30} max={50} value={filters.minR3min}
-              onChange={v => updateFilter('minR3min', v)} unit="%" />
-            <RangeFilter label="Min 3Y Rolling Median" min={-30} max={50} value={filters.minR3med}
-              onChange={v => updateFilter('minR3med', v)} unit="%" />
-            <RangeFilter label="Max Rolling Spread" min={0} max={80} value={filters.maxRollSpread}
-              onChange={v => updateFilter('maxRollSpread', v)} unit="pp" side="max" />
-          </FilterSection>
-
-          {/* Extra added filters */}
-          {addedFilters.includes('vol') && (
-            <FilterSection label="Volatility (Std Dev)">
-              <RangeFilter label="Max Volatility" min={0} max={35} value={filters.maxVol}
-                onChange={v => updateFilter('maxVol', v)} unit="%" side="max" />
-            </FilterSection>
-          )}
-          {addedFilters.includes('maxdd') && (
-            <FilterSection label="Max Drawdown (%)">
-              <RangeFilter label="Max Drawdown Floor" min={-80} max={0} value={filters.maxDrawdown}
-                onChange={v => updateFilter('maxDrawdown', v)} unit="%" />
-            </FilterSection>
-          )}
-          {addedFilters.includes('percLarge') && (
-            <FilterSection label="% Large Cap">
-              <RangeFilter label="Min Large Cap Allocation" min={0} max={100} value={filters.minPercLarge}
-                onChange={v => updateFilter('minPercLarge', v)} unit="%" />
-            </FilterSection>
-          )}
-          {addedFilters.includes('percEquity') && (
-            <FilterSection label="% Equity">
-              <RangeFilter label="Min Equity Allocation" min={0} max={100} value={filters.minPercEquity}
-                onChange={v => updateFilter('minPercEquity', v)} unit="%" />
-            </FilterSection>
-          )}
-          {addedFilters.includes('retvscat') && (
-            <FilterSection label="Return vs Category 3Y">
-              <RangeFilter label="Min Outperformance" min={-20} max={30} value={filters.minRetVsCat3y}
-                onChange={v => updateFilter('minRetVsCat3y', v)} unit="%" />
-            </FilterSection>
-          )}
-
-          {/* + Add Filter */}
-          <div className="p-3">
-            <button
-              onClick={() => setShowAddFilter(s => !s)}
-              className="flex items-center gap-2 w-full text-xs font-semibold py-2 px-3 rounded-lg transition"
-              style={{ border: '1.5px dashed var(--border-color)', color: 'var(--accent)', background: 'var(--accent-light)' }}
-            >
-              <Plus className="w-3.5 h-3.5" /> Add Filter
-            </button>
-            {showAddFilter && (
-              <div className="mt-2 space-y-1">
-                {optionalFilters.filter(f => !addedFilters.includes(f.key)).map(f => (
-                  <button
-                    key={f.key}
-                    onClick={() => { setAddedFilters(s => [...s, f.key]); setShowAddFilter(false); }}
-                    className="flex items-center gap-1.5 w-full text-xs px-2 py-1.5 rounded-lg text-left transition"
-                    style={{ color: 'var(--text-main)', background: 'var(--hover-bg)' }}
-                  >
-                    <Plus className="w-3 h-3" /> {f.label}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
+        <div className="flex flex-1 overflow-hidden px-2.5 sm:px-6 pb-6 gap-4 animate-fadeIn">
+        {/* ── Left Sidebar (Desktop Only) ─────────────────────────────────── */}
+        <div className="hidden lg:block w-64 flex-shrink-0 tt-sidebar rounded-xl overflow-y-auto" style={{ maxHeight: 'calc(100vh - 200px)' }}>
+          {renderFilterContent()}
         </div>
 
         {/* ── Right: Results Panel ─────────────────────────────────────────── */}
         <div className="flex-1 flex flex-col gap-3 min-w-0">
           {/* Results header bar */}
-          <div className="tt-card flex items-center justify-between px-4 py-2.5 text-xs" style={{ background: 'var(--card-bg)' }}>
-            <div className="flex items-center gap-3">
+          <div className="tt-card flex flex-col sm:flex-row sm:items-center justify-between px-3 sm:px-4 py-2.5 text-xs gap-2" style={{ background: 'var(--card-bg)' }}>
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
               {activeFilterCount > 0 && (
                 <span className="chip-accent">{activeFilterCount} filter{activeFilterCount > 1 ? 's' : ''} applied</span>
               )}
@@ -793,12 +863,12 @@ export const MFScreener: React.FC = () => {
                 </button>
               )}
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex flex-wrap items-center justify-between sm:justify-end gap-2 sm:gap-3">
               <span style={{ color: 'var(--text-muted)' }}>
                 Showing <strong style={{ color: 'var(--text-main)' }}>{Math.min(paged.length, sorted.length)}</strong> of{' '}
                 <strong style={{ color: 'var(--text-main)' }}>{sorted.length}</strong> results
               </span>
-              <span className="text-[10px]" style={{ color: 'var(--text-sub)' }}>
+              <span className="text-[10px] hidden md:inline" style={{ color: 'var(--text-sub)' }}>
                 last updated at 8:00 AM IST
               </span>
               <ExportDropdown data={fundsToExportRows(sorted)} filename={`mf-screener-${activeScreen ?? 'results'}`} />

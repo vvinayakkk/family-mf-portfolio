@@ -22,12 +22,12 @@ export const TaxOptimization: React.FC = () => {
   return (
     <div className="space-y-6 pb-12 animate-fadeIn">
       {/* Header Banner */}
-      <div className="p-6 rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-md">
+      <div className="p-4 sm:p-6 rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-md">
         <div className="flex items-center space-x-2 text-xs text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-wider mb-1">
           <Percent className="w-4 h-4" />
           <span>Capital Gains Tax Optimization & Harvesting Engine</span>
         </div>
-        <h2 className="text-xl sm:text-2xl font-extrabold text-neutral-900 dark:text-white">Tax Optimizer & Harvesting Engine</h2>
+        <h2 className="text-lg sm:text-2xl font-extrabold text-neutral-900 dark:text-white">Tax Optimizer & Harvesting Engine</h2>
         <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1 max-w-3xl">
           Plan tax-efficient redemptions under Indian Income Tax Budget 2024 rules (LTCG 12.5% with ₹1.25L exemption vs STCG 20%).
         </p>
@@ -36,7 +36,7 @@ export const TaxOptimization: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left Column: Tax Inputs */}
         <div className="lg:col-span-6 space-y-4">
-          <div className="p-6 rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-md space-y-4">
+          <div className="p-4 sm:p-6 rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-md space-y-4">
             <h3 className="font-bold text-base text-neutral-900 dark:text-white">Rebalance Tax Parameters</h3>
 
             <div>
@@ -77,7 +77,7 @@ export const TaxOptimization: React.FC = () => {
 
         {/* Right Column: Tax Breakdown Results */}
         <div className="lg:col-span-6 space-y-4">
-          <div className="p-6 rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-md space-y-4">
+          <div className="p-4 sm:p-6 rounded-2xl bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-md space-y-4">
             <h3 className="font-bold text-base text-neutral-900 dark:text-white">Tax Calculation Results</h3>
 
             <div className="grid grid-cols-2 gap-3 text-xs">

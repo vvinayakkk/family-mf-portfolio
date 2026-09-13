@@ -423,7 +423,7 @@ export const GoldSilverEtfExplorer: React.FC = () => {
   return (
     <div className="space-y-6 pb-12 animate-fadeIn">
       {/* ── Top Header & Hero KPIs ────────────────────────────────────────── */}
-      <div className="p-6 rounded-2xl tt-card shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="p-4 sm:p-6 rounded-2xl tt-card shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center space-x-2 mb-1.5">
             <span className="chip-accent font-extrabold text-xs">
@@ -468,62 +468,62 @@ export const GoldSilverEtfExplorer: React.FC = () => {
       </div>
 
       {/* ── Key Commodity Macro Bar ────────────────────────────────────────── */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-        <div className="p-4 rounded-xl tt-card">
-          <div className="flex justify-between items-start">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3">
+        <div className="p-3.5 sm:p-4 rounded-xl tt-card">
+          <div className="flex flex-col sm:flex-row justify-between items-start gap-1">
             <div>
-              <p className="text-[11px] font-bold" style={{ color: 'var(--text-muted)' }}>Spot Gold (MCX / 10g)</p>
-              <p className="text-xl font-black text-amber-500 mt-0.5">₹78,450</p>
+              <p className="text-[10px] sm:text-[11px] font-bold" style={{ color: 'var(--text-muted)' }}>Spot Gold (MCX / 10g)</p>
+              <p className="text-lg sm:text-xl font-black text-amber-500 mt-0.5">₹78,450</p>
             </div>
-            <span className="chip-accent text-[10px] text-emerald-600 font-bold">+0.85% Today</span>
+            <span className="chip-accent text-[9px] sm:text-[10px] text-emerald-600 font-bold">+0.85% Today</span>
           </div>
-          <p className="text-[11px] mt-2" style={{ color: 'var(--text-muted)' }}>
-            1Y CAGR: <strong className="text-emerald-600">+31.4%</strong> • 5Y CAGR: <strong>+15.6%</strong>
+          <p className="text-[10px] sm:text-[11px] mt-1.5" style={{ color: 'var(--text-muted)' }}>
+            1Y CAGR: <strong className="text-emerald-600">+31.4%</strong> • 5Y: <strong>+15.6%</strong>
           </p>
         </div>
 
-        <div className="p-4 rounded-xl tt-card">
-          <div className="flex justify-between items-start">
+        <div className="p-3.5 sm:p-4 rounded-xl tt-card">
+          <div className="flex flex-col sm:flex-row justify-between items-start gap-1">
             <div>
-              <p className="text-[11px] font-bold" style={{ color: 'var(--text-muted)' }}>Spot Silver (MCX / 1kg)</p>
-              <p className="text-xl font-black text-slate-400 mt-0.5">₹94,600</p>
+              <p className="text-[10px] sm:text-[11px] font-bold" style={{ color: 'var(--text-muted)' }}>Spot Silver (MCX / 1kg)</p>
+              <p className="text-lg sm:text-xl font-black text-slate-400 mt-0.5">₹94,600</p>
             </div>
-            <span className="chip-accent text-[10px] text-emerald-600 font-bold">+1.45% Today</span>
+            <span className="chip-accent text-[9px] sm:text-[10px] text-emerald-600 font-bold">+1.45% Today</span>
           </div>
-          <p className="text-[11px] mt-2" style={{ color: 'var(--text-muted)' }}>
-            1Y CAGR: <strong className="text-emerald-600">+38.5%</strong> • 5Y CAGR: <strong>+18.9%</strong>
+          <p className="text-[10px] sm:text-[11px] mt-1.5" style={{ color: 'var(--text-muted)' }}>
+            1Y CAGR: <strong className="text-emerald-600">+38.5%</strong> • 5Y: <strong>+18.9%</strong>
           </p>
         </div>
 
-        <div className="p-4 rounded-xl tt-card">
-          <div className="flex justify-between items-start">
+        <div className="p-3.5 sm:p-4 rounded-xl tt-card">
+          <div className="flex flex-col sm:flex-row justify-between items-start gap-1">
             <div>
-              <p className="text-[11px] font-bold" style={{ color: 'var(--text-muted)' }}>Gold/Silver Ratio</p>
-              <p className="text-xl font-black" style={{ color: 'var(--text-main)' }}>82.93</p>
+              <p className="text-[10px] sm:text-[11px] font-bold" style={{ color: 'var(--text-muted)' }}>Gold/Silver Ratio</p>
+              <p className="text-lg sm:text-xl font-black" style={{ color: 'var(--text-main)' }}>82.93</p>
             </div>
-            <span className="chip text-[10px]">Historical Median: 75</span>
+            <span className="chip text-[9px] sm:text-[10px]">Median: 75</span>
           </div>
-          <p className="text-[11px] mt-2" style={{ color: 'var(--text-muted)' }}>
-            Silver currently <strong className="text-emerald-600">Undervalued vs Gold</strong>
+          <p className="text-[10px] sm:text-[11px] mt-1.5" style={{ color: 'var(--text-muted)' }}>
+            Silver <strong className="text-emerald-600">Undervalued vs Gold</strong>
           </p>
         </div>
 
-        <div className="p-4 rounded-xl tt-card">
-          <div className="flex justify-between items-start">
+        <div className="p-3.5 sm:p-4 rounded-xl tt-card">
+          <div className="flex flex-col sm:flex-row justify-between items-start gap-1">
             <div>
-              <p className="text-[11px] font-bold" style={{ color: 'var(--text-muted)' }}>Nifty 50 BeES Index</p>
-              <p className="text-xl font-black text-emerald-600 mt-0.5">₹278.50</p>
+              <p className="text-[10px] sm:text-[11px] font-bold" style={{ color: 'var(--text-muted)' }}>Nifty 50 BeES</p>
+              <p className="text-lg sm:text-xl font-black text-emerald-600 mt-0.5">₹278.50</p>
             </div>
-            <span className="chip text-[10px]">Expense: 0.04%</span>
+            <span className="chip text-[9px] sm:text-[10px]">Exp: 0.04%</span>
           </div>
-          <p className="text-[11px] mt-2" style={{ color: 'var(--text-muted)' }}>
-            3Y CAGR: <strong>+16.4%</strong> • AUM: <strong>₹38,500 Cr</strong>
+          <p className="text-[10px] sm:text-[11px] mt-1.5" style={{ color: 'var(--text-muted)' }}>
+            3Y CAGR: <strong>+16.4%</strong> • AUM: <strong>₹38.5k Cr</strong>
           </p>
         </div>
       </div>
 
       {/* ── Performance Chart & Comparative Visualizer ─────────────────────── */}
-      <div className="p-6 rounded-2xl tt-card space-y-4">
+      <div className="p-4 sm:p-6 rounded-2xl tt-card space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b pb-3" style={{ borderColor: 'var(--border-color)' }}>
           <div>
             <h3 className="font-extrabold text-sm flex items-center gap-2" style={{ color: 'var(--text-main)' }}>
@@ -536,13 +536,12 @@ export const GoldSilverEtfExplorer: React.FC = () => {
           </div>
 
           {/* Asset Selector */}
-          <div className="flex items-center gap-2">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-2">
             <span className="text-[11px] font-bold" style={{ color: 'var(--text-muted)' }}>Select Benchmark:</span>
             <select
               value={selectedAssetId}
               onChange={(e) => setSelectedAssetId(e.target.value)}
-              className="tt-input text-xs py-1 px-2.5 rounded-lg"
-              style={{ width: 220 }}
+              className="tt-input text-xs py-1.5 px-2.5 rounded-lg w-full sm:w-[220px]"
             >
               {liveCommodityFunds.map(a => (
                 <option key={a.id} value={a.id}>{a.name} ({a.symbol})</option>
@@ -552,9 +551,9 @@ export const GoldSilverEtfExplorer: React.FC = () => {
         </div>
 
         {/* Recharts Area Container */}
-        <div className="h-[320px] w-full">
+        <div className="h-[260px] sm:h-[320px] w-full">
           <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+            <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -15, bottom: 0 }}>
               <defs>
                 <linearGradient id="assetGrad" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor="#00B386" stopOpacity={0.3} />
@@ -562,8 +561,8 @@ export const GoldSilverEtfExplorer: React.FC = () => {
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" stroke={ct.grid} />
-              <XAxis dataKey="date" stroke={ct.axis} fontSize={11} interval={6} tickLine={false} />
-              <YAxis stroke={ct.axis} fontSize={11} domain={['auto', 'auto']} tickFormatter={v => `₹${v}`} />
+              <XAxis dataKey="date" stroke={ct.axis} fontSize={10} interval={6} tickLine={false} />
+              <YAxis stroke={ct.axis} fontSize={10} domain={['auto', 'auto']} tickFormatter={v => `₹${v}`} />
               <Tooltip
                 contentStyle={{
                   backgroundColor: ct.tooltipBg,
@@ -577,7 +576,7 @@ export const GoldSilverEtfExplorer: React.FC = () => {
                   name === 'asset' ? activeAsset.symbol : name === 'gold' ? 'Gold BeES' : name === 'silver' ? 'Silver BeES' : 'Nifty 50'
                 ]}
               />
-              <Legend />
+              <Legend wrapperStyle={{ fontSize: '11px', paddingTop: '4px' }} />
               <Area type="monotone" dataKey="asset" name={activeAsset.symbol} stroke="#00B386" strokeWidth={2.5} fillOpacity={1} fill="url(#assetGrad)" />
               <Line type="monotone" dataKey="gold" name="Gold BeES" stroke="#f59e0b" strokeWidth={2} dot={false} strokeDasharray="3 3" />
               <Line type="monotone" dataKey="silver" name="Silver BeES" stroke="#94a3b8" strokeWidth={2} dot={false} />
@@ -591,18 +590,18 @@ export const GoldSilverEtfExplorer: React.FC = () => {
       <div className="space-y-3">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           {/* Category Tabs */}
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none touch-pan-x">
             {[
-              { id: 'ALL', label: `All Instruments (${liveCommodityFunds.length})` },
-              { id: 'GOLD', label: '🟡 Gold ETFs & Funds' },
+              { id: 'ALL', label: `All (${liveCommodityFunds.length})` },
+              { id: 'GOLD', label: '🟡 Gold ETFs' },
               { id: 'SILVER', label: '⚪ Silver ETFs' },
-              { id: 'INDEX', label: '📈 Index ETFs (Nifty/Bank)' },
-              { id: 'GLOBAL', label: '🌐 Global & US Tech ETFs' }
+              { id: 'INDEX', label: '📈 Index ETFs' },
+              { id: 'GLOBAL', label: '🌐 Global ETFs' }
             ].map(tab => (
               <button
                 key={tab.id}
                 onClick={() => setSelectedTab(tab.id as any)}
-                className="px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition"
+                className="px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition flex-shrink-0"
                 style={{
                   background: selectedTab === tab.id ? 'var(--accent)' : 'var(--card-bg)',
                   color: selectedTab === tab.id ? '#fff' : 'var(--text-muted)',
@@ -619,7 +618,7 @@ export const GoldSilverEtfExplorer: React.FC = () => {
             <Search className="w-3.5 h-3.5 absolute left-3 top-2.5" style={{ color: 'var(--text-muted)' }} />
             <input
               type="text"
-              placeholder="Search by name, symbol, AMC..."
+              placeholder="Search name, symbol, AMC..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="tt-input pl-8 text-xs py-1.5 rounded-xl w-full"
@@ -629,7 +628,7 @@ export const GoldSilverEtfExplorer: React.FC = () => {
 
         {/* ── Table ─────────────────────────────────────────────────────────── */}
         <div className="tt-card overflow-hidden">
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto table-scroll-container">
             <table className="mono-table">
               <thead>
                 <tr>
