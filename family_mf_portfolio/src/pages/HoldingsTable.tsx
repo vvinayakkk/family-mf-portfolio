@@ -64,11 +64,11 @@ export const HoldingsTable: React.FC<HoldingsTableProps> = ({ onSelectFund }) =>
   const [selectedAmc, setSelectedAmc] = useState<string>('ALL');
   const [excludeElss, setExcludeElss] = useState<boolean>(false);
 
-  // Crazy Range Slider Filters
-  const [minXirr, setMinXirr] = useState<number>(0);
+  // Range Slider Filters (default to -10 so negative return funds are not hidden)
+  const [minXirr, setMinXirr] = useState<number>(-10);
   const [minSharpe, setMinSharpe] = useState<number>(0);
   const [maxExpense, setMaxExpense] = useState<number>(2.5);
-  const [min3yCagr, setMin3yCagr] = useState<number>(0);
+  const [min3yCagr, setMin3yCagr] = useState<number>(-10);
 
   // Sorting State
   const [sortField, setSortField] = useState<keyof MutualFundHolding>('amountLakhs');
@@ -121,10 +121,10 @@ export const HoldingsTable: React.FC<HoldingsTableProps> = ({ onSelectFund }) =>
       const matchesTag = selectedTag === 'ALL' || fund.actionTag === selectedTag;
       const matchesAmc = selectedAmc === 'ALL' || fund.amc === selectedAmc;
 
-      const matchesXirr = fund.returnPct >= minXirr;
-      const matchesSharpe = fund.sharpeRatio >= minSharpe;
-      const matchesExpense = fund.expenseRatio <= maxExpense;
-      const matches3yCagr = fund.cagr3y >= min3yCagr;
+      const matchesXirr = minXirr <= -10 ? true : fund.returnPct >= minXirr;
+      const matchesSharpe = minSharpe <= 0 ? true : fund.sharpeRatio >= minSharpe;
+      const matchesExpense = maxExpense >= 2.5 ? true : fund.expenseRatio <= maxExpense;
+      const matches3yCagr = min3yCagr <= -10 ? true : fund.cagr3y >= min3yCagr;
 
       return (
         matchesSearch && 
@@ -178,10 +178,10 @@ export const HoldingsTable: React.FC<HoldingsTableProps> = ({ onSelectFund }) =>
     setSelectedTag('ALL');
     setSelectedAmc('ALL');
     setExcludeElss(false);
-    setMinXirr(0);
+    setMinXirr(-10);
     setMinSharpe(0);
     setMaxExpense(2.5);
-    setMin3yCagr(0);
+    setMin3yCagr(-10);
     setSortField('amountLakhs');
     setSortOrder('desc');
   };
@@ -479,10 +479,12 @@ export const HoldingsTable: React.FC<HoldingsTableProps> = ({ onSelectFund }) =>
             {/* Sliders Row */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-2 border-t border-neutral-200 dark:border-neutral-800">
               <div>
-                <label className="text-[11px] font-bold text-neutral-500 mb-1 block">Min XIRR Return % ({minXirr}%)</label>
+                <label className="text-[11px] font-bold text-neutral-500 mb-1 block">
+                  Min XIRR Return % ({minXirr <= -10 ? 'All' : `${minXirr}%`})
+                </label>
                 <input
                   type="range"
-                  min="0"
+                  min="-10"
                   max="35"
                   value={minXirr}
                   onChange={(e) => setMinXirr(Number(e.target.value))}
@@ -491,10 +493,12 @@ export const HoldingsTable: React.FC<HoldingsTableProps> = ({ onSelectFund }) =>
               </div>
 
               <div>
-                <label className="text-[11px] font-bold text-neutral-500 mb-1 block">Min 3Y CAGR % ({min3yCagr}%)</label>
+                <label className="text-[11px] font-bold text-neutral-500 mb-1 block">
+                  Min 3Y CAGR % ({min3yCagr <= -10 ? 'All' : `${min3yCagr}%`})
+                </label>
                 <input
                   type="range"
-                  min="0"
+                  min="-10"
                   max="35"
                   value={min3yCagr}
                   onChange={(e) => setMin3yCagr(Number(e.target.value))}
