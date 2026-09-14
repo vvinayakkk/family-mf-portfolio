@@ -266,15 +266,15 @@ export const HoldingsTable: React.FC<HoldingsTableProps> = ({ onSelectFund }) =>
           </div>
           <ExportDropdown
             data={filteredHoldings.map(h => ({
+              'Scheme Name': h.name,
+              'XIRR (%)': h.xirr,
               'Investor Name': h.investorName,
               'Platform': h.platform,
-              'Fund Name': h.name,
               'Folio Number': h.folioNumber,
               'Units': h.units,
               'Cost Value (INR)': h.costValueInr,
               'Current Value (INR)': h.currentValueInr,
               'Appreciation (INR)': h.appreciationInr,
-              'XIRR (%)': h.xirr,
               'Annualized Return (%)': h.annualizedReturn,
               'Weighted Avg Days': h.weightedAvgDays,
               'AMC': h.amc, 
